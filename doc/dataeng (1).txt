@@ -1,0 +1,237 @@
+dataeng
+===
+
+[00:00:00] Speaker: So I was given the extremely difficult task of taking something as unsexy as data engineering and try to find a way to make it appealing to you. So this is my attempt to show you the plumbing of how these, let's say, agentic OS systems. The hard part isn't the beautiful dashboard, isn't the interactivity of all the agents.
+
+[00:00:20] Speaker: It's everything that happens underneath the hood. And this applies for any project, by the way. Any time that I've taken on a data-oriented project or dashboard-oriented project in my past life, data engineering was the bedrock of everything. So you'll see it called data engineering, data science, or even analytics engineering.
+
+[00:00:39] Speaker: And the point of this video is just emphasizing a lot of the different things that we take a look at, and we audit before we take on any project, because AI is purely the medium. Everything before the AI or underneath the AI is really what matters. And I'm filming this from Dubai right now, and I passed by this building, and this is the name of a developer, one of the [00:01:00] developers here in Dubai.
+
+[00:01:01] Speaker: And it triggered me to take this picture and put it on this canvas, because this was one of my first international engagements through Fiverr by accident, where someone hit me up from this company, and they said, "We want a way to talk to our data." And this was back in very early twenty twenty-three, where RAG was still barely working.
+
+[00:01:20] Speaker: We had ChatGPT three point five Turbo, text to SQL, with SQL being the language you use to interact with databases, was in its nascency. So I flew to Dubai for multiple reasons, and then on my path, I went and met with them in person. I went to their offices where they walked me around, they gave me a tour, and they were trying to figure out how to make sense of talking to their data using GPT three point five Turbo.
+
+[00:01:47] Speaker: The hardest part for that project, the part that today I remember breaking my brain, is how do we organize all your data systems in a way where we can have an easy way for [00:02:00] such a small context window, I think it was around four thousand tokens at the time, to go through these swaths of data to answer your basic questions.
+
+[00:02:08] Speaker: So then I started asking, "What questions do you want to ask of the data?" And then from there, we reverse engineered how we could create what are called summary tables, which I'll go through in this video, to have as easy a way as possible to offload a lot of the AI's responsibility to sift through the information and take a lot of the information on a silver platter and apply that to a brand-new scenario.
+
+[00:02:32] Speaker: So that's one small microcosm of where data engineering came into play, and we use it all the time. Now, when it comes to the data engineering layer, you want to think about all these four different layers. On YouTube, your average YouTuber who doesn't have the background will just focus on the agentic layer.
+
+[00:02:50] Speaker: It's the sexy layer, it's the shiny layer. But it's not the layer where the magic happens. Once we navigate into orchestration, skills, and rules, at least in our new [00:03:00] world right now, this is where you start making some progress. Especially the average client you deal with, including you, not to put you on the spot, you probably have a lot of steel skills in your skill set, pun intended.
+
+[00:03:12] Speaker: You probably have also rules or lack of rules, or rules that you have not pruned in a while, because very few things in your agentic stack are meant to be static. As things evolve, as models evolve, everything associated to your agentic OS will evolve as well. And then we have the data engineering layer.
+
+[00:03:31] Speaker: So this is where we start to really get into unsexy territory. So this is where most companies have an empire of Excel files and CSVs, especially corporate ones. The corporate ones are the ones that have the biggest bottlenecks in this regard. And then when it comes to databases, some will have very old-fashioned Oracle databases, SAP.
+
+[00:03:52] Speaker: This could be an absolute nightmare. So this a-agentic layer becomes super easy, but you can't even get here [00:04:00] without proper understanding of where to get the data from here. And all of this really depends on the raw sources, the raw information. And like I said here, if the floor wobbles, the whole house wobbles.
+
+[00:04:12] Speaker: So all your agents, you can make whatever agentic OS you want. All the stuff doesn't matter if the underlying data isn't actually in the right format. So when it comes to assessing a client's data, you wanna go through the data pyramid. And now this is my understanding, my synthesis of it. This is not a hard and fast set of rules or frameworks.
+
+[00:04:30] Speaker: It's just how I've taken a look at things. And in case you don't know, I used to work as a data scientist for two, three years. I was a senior data scientist for one of those years. I was a data analyst and then data engineer for five years. So I have a lot of background doing plumbing, and the gold is in being a really good data plumber.
+
+[00:04:49] Speaker: If you could do data plumbing and architecture design, everything else will be easy, especially now that you have Claude Code. Because all of my synthesis, my analysis of duplicates in the [00:05:00] data, repetitions, anomalies, all of that was an acquired labor of love over time, where I created Python scripts by hand that I would run to run these audits.
+
+[00:05:10] Speaker: Now you have the luxury of asking for a series of snippets of data on top of what are the top ten questions you want to ask of your data, and having something like Claude Code or Codex go through and see what's missing, what are the gaps. You don't have to live my life, where I had to do all the dirty work to go through the data, then sift through file by file, and then see, could we answer all of their questions based on all the columns in the data and all the data types we have in the data, et cetera.
+
+[00:05:38] Speaker: So we have at the very bottom of the pyramid here, the raw sources. So this is obviously whatever they have. And then we go to the audit level. So this is where you want to see, do we have all the proper mechanics? Do we have too much volume of data or too little? Do we have proper schemas in place? A schema is the way a database is laid out.
+
+[00:05:59] Speaker: [00:06:00] Now, there are all kinds of schools of thought in data engineering. One of them is creating what's called a star schema. If you kind of research into it, I don't want to go into it too, in-- too deeply because it's a rabbit hole. But if you just Google star schema, it'll show you what a standard table will look like and how it should be designed.
+
+[00:06:19] Speaker: TLDR, you want to create a series of databases that can talk to each other. So if you have a client ID, if you have a customer ID, and let's say you have a profile table, a payments table, um, additional information, each table should have different ways that you can bridge to another table. So if you have a customer table and then you have a profile table that's specific somehow to that customer, then you wanna make sure that you have a customer ID or a profile ID in both cases, so you can match onto them and bridge onto them.
+
+[00:06:49] Speaker: Same thing with payments. You need a customer ID on that table to make sure if you want to ask a question about your customer, so what is the lifetime value of my average customer? You would never be able to [00:07:00] answer that unless you had some way to associate the customer table to a payments table. Now, if I'm saying this to you, this might sound logical, but when you're looking at fresh data for the first time, you might not have these instincts 'cause you haven't been there and done that.
+
+[00:07:13] Speaker: Again, luckily, you can always lean on something like a Claude code right now to help understand what might be missing. Now, the next level are snippets, and this is something that I ask for all the time when it comes to anything. I actually just had a conversation with a good friend of mine who wanted me to expedite me designing the enterprise version of Claude Claw 'cause he's dealing with a big hedge fund.
+
+[00:07:36] Speaker: And one of the things that I told him on the phone was, "Listen, I can't help you design your inc-- infrastructure or your architecture for this big private equity firm unless I can see a snippet of all of their data tables." And the reason why I ask for this-- Now, a hundred is just based on my experience.
+
+[00:07:53] Speaker: It gives me the eighty/twenty. Depending on the nature of the company, it might make sense to look at a thousand rows of data, maybe even ten [00:08:00] thousand rows of data. And what you're looking for is within that short sample, do you see anomalies that would generalize across the whole data set? Let's give some more color to this.
+
+[00:08:10] Speaker: Are there duplicates in the data? Are there tons of NAs? Are there things that are hard-coded? Let's say you have a whole column full of numbers, and for whatever reason, a handful have text values, and some of these could be full sentences, and it seems very illogical when you see it. But when you have things like, let's say, data migrations, where a company will go from system A to system B, and I know about these because I used to do system migrations for clients at some point in my life.
+
+[00:08:39] Speaker: You will have mismatched data. You'll have n-- data that's mapped from column A, which was everyone's age, to now accidentally column B, which is some form of, let's say, date of birth or something like that. So you will find ages in people's date of birth columns, where it should just be a pure date, let's say, month, day, year.
+
+[00:08:59] Speaker: You'll [00:09:00] find all kinds of anomalies in the data. And I'm telling you this, if we're gonna wanna go back to why do I care? Having a agentic OS system, a Claude, Claw, Hermes, any one of these is useless if you're going to send your agents on a wild goose chase. The reason why many people are spending hundreds of dollars on their, on these agents is you ask agent for a goal.
+
+[00:09:23] Speaker: It will go and do its best to sift through the data and get that information. Even if it works once in a while, you wanna look at that token consumption, because most likely, it had to go through and surmise and make a series of assumptions and stack those assumptions to answer that question. Big flaws in data basically realize a big flaw in execution of agentic workflows, because an agent is only as good as the data that you feed it.
+
+[00:09:49] Speaker: And then this really culminates in the top layer of the data pyramid. Do they have things like briefs? Do they have this thing called a data dictionary? If you don't know what a data dictionary is, it is one of the most [00:10:00] important documents that I ask for, especially with bigger companies. So if we take a little example here, this would be...
+
+[00:10:06] Speaker: Or let's take a look at this one. This would be an example of a data dictionary. So basically, they would give you this whole folder, or this file rather, of all the field names they have, the type of data type that they have, the format of that data, the field size, the description of what it is, and an example.
+
+[00:10:26] Speaker: This alone is very helpful. If you feed this to Claude Code and ask it, "Hey," these are the questions they wanna ask of the data, ask them for their top ten to twenty questions, assuming they know that. If they don't know what questions they wanna ask of the data, that's already a red flag to me, because you don't even know how you're gon- wanna use it, and now you wanna use AI?
+
+[00:10:45] Speaker: You don't deserve to use AI. And I'm not saying that as a condescending person. AI is a luxury that you get to use once you have your back of house in order. If you don't know what you wanna ask, and then you have no way to ask it properly because your data's not in the right [00:11:00] format, then you don't get the chance to use agentic OS.
+
+[00:11:02] Speaker: Even though it's sexy, even though it's trendy, it will offer no value to you because you have no way to actually properly interface with your dataset. So something like this in an organization that has their stuff together is a good signal that they're, one, really good to work with, and two, that they've done this due diligence in the past.
+
+[00:11:22] Speaker: And with bigger companies with proper IT teams, you will have a data dictionary, guaranteed. If anything, by law in some companies, they have to have a data dictionary for compliance reasons. So you'll find that there. Now, moving on from this, if I was doing an audit, what are four different domains I would take a look at?
+
+[00:11:42] Speaker: Now, the small contingency here is if the data has a combination of numerical and non-numerical things. So average dataset, let's say company makes revenue off of a product or services, then you'll have a combination of what are called categorical columns and then numerical [00:12:00] columns. And of the numerical ones, some are called discrete and some are called continuous.
+
+[00:12:04] Speaker: I could teach a whole course on this. I used to teach courses on this. TLDR: continuous data is data that you can cut with a knife. Something continuous meaning revenue. You can have point four of a dollar. Time, technically, you can have point o-o-one of a millisecond. That's continuous data. Discrete is like age.
+
+[00:12:28] Speaker: Mm, actually, not the best example. I mean, technically, age is continuous, but we look at it as a static number. So technically, I'm thirty-two right now. Technically, if you wanna go down to continuous data, I am thirty-two point one, two, three, four, five, six, seven, like endless amount of numbers because my age is constantly moving.
+
+[00:12:51] Speaker: But in a dataset, it's static. So for all intents and purposes, for that specific data point, it would be what's called discrete. Now let's give you another example. [00:13:00] Let's say someone's tenure in a company, so how long they've been with a specific organization. Let's say it's a hundred and twenty-two days.
+
+[00:13:08] Speaker: Technically, it's not a continuous value. It's discrete. We can't split that with a knife. ~Age. Uh, uh, sorry, not age of,~ let's say, a product, same thing. So as you go back and forth, you'll be able to see more examples of continuous versus discrete. But in general, continuous is anything like electricity, revenue, uh, kilowatts consumed, anything that really lends itself to having hyper decimals worth of values.
+
+[00:13:33] Speaker: And you only care about continuous versus non-continuous 'cause continuous is where your calculations are gonna come from, your average order value, your lifetime value, your revenue per month, revenue per year, revenue per quarter, anything related to that. I just like to know right away what are the things that we can aggregate and divide and add and multiply to get quantifiable answers to quantifiable questions.
+
+[00:13:59] Speaker: [00:14:00] Now, getting back to this, I wanna worry about things like volume. So volume is important because it will tell you what kind of tools you need to properly parse through data. You can't use Claude Code to go through a ten million record database At least you can't throw the ten million records into the context window.
+
+[00:14:18] Speaker: That would be preposterous. You would need to use some form of text to SQL. You need to connect to a service that can do the data wrangling for you so that it can put it on a silver platter for Claude Code to do what Claude Code needs to do. Good example is I used to work with Coca-Cola, and you can imagine Coca-Cola is the definition of big data.
+
+[00:14:37] Speaker: It was the first time in my life I had to deal with ten billion rows of data. Like, it's astronomical amounts of data, data. So many tables because it-- there's transactions across the world, transactions by nation, and we had to use something that's called Spark. And if you're not familiar, Spark, big data, is a way...
+
+[00:14:58] Speaker: It's called Apache Spark. [00:15:00] That's how you deal with enterprise-level analytics. If you are early in your journey, I would never dive into this deep end 'cause it's, it's hard to use. It's finicky. It is intimidating. I was intimidated when I used it. But if you were using Claude Code or something similar to analyze a dataset, you would need to use some form of text to SQL or go back and forth with Apache Spark to create a summary view or a snapshot view, and then feed parts of that snapshot view to something like Claude Code.
+
+[00:15:32] Speaker: This is very much uncharted waters. So big data is something I would stay away from if I was starting out. Most likely, you'll be dealing with companies with thousands, if not tens of thousands of rows of data. In which case, standard databases, things like, uh, what are called DuckDB, uh, PostgreSQL, those are databases out of the box.
+
+[00:15:51] Speaker: Supabase is pretty much a wrapper on top of PostgreSQL. So if you've ever used Supabase, that's pretty much what you're dealing with. I like to also know the [00:16:00] number of columns. I've dealt with companies that have, like, a hundred and fifty columns per table, and we would find out that seventy of those a hundred and fifty were either deprecated or from a prior migration from another system, meaning none of that data would ever be dynamic ever again.
+
+[00:16:16] Speaker: It was a static set in place, and they-- based on the questions that they wanted to ask, there was no value in keeping them. So we created versions of those database tables that were devoid of those older columns, just to keep things as lean and mean and pos-- as possible. So this sounds super boring, and hopefully, your eyes aren't glazing over too much, but the goal of this is that you have some fluency in asking the right questions.
+
+[00:16:40] Speaker: Like I said, in terms of the snippet, I like to ask for a hundred rows of data per table to give me the TLDR of what I'm dealing with. Typically, at least with my instincts, I'm really good at telling you, "Yeah, this is gonna work," or, "This is not gonna work. We need this versus that. We need to change these data types before it lands in our system," et cetera.
+
+[00:16:58] Speaker: Which leads us to schema, [00:17:00] like I referred to before. Not just column names, but D types means data type, so an integer, a string. Uh, there's something called a big integer. I could go down the rabbit hole and tell you-- explain to you why you would care for integer versus big integer, but that's again, an example of a rabbit hole where you can Google yourself.
+
+[00:17:16] Speaker: And then this one's really important, null percentage. So you have datasets sometimes that have very sporadic data. Of a column of five million rows, maybe a hundred of those rows actually have a value. So how are you gonna deal with that? Is it gonna be helpful to leave blanks in the column, or is it better to put N/A in the column?
+
+[00:17:37] Speaker: Or is it better to create a separate table that has a snapshot view of only those hundred people? Because when you look at those hundred people with this column that has a value, then you're always doing analysis specific to those people. You might not know this until you have the questions at your disposal that the client wants to ask, but it's good to keep that in mind.
+
+[00:17:57] Speaker: And last but not least, we have distribution. [00:18:00] Now, as a data scientist, this was my main way of looking at continuous base data. So in real life, when you have continuous data, you wanna ask about things like the minimum value, the maximum value, median, and top categories. I'll focus on the first three. Let's say we have a column of how much someone has spent on a particular platform.
+
+[00:18:21] Speaker: Now, the minimum the-- theoretically would be zero dollars. Having negative values would be unusual, but it's not impossible. So to give a tangible example, you could have someone spend negative fifty dollars as their lifetime spend as a customer if they had some form of discount code and they used that discount code to buy something.
+
+[00:18:43] Speaker: So technically, they didn't make a net gain for the company, there was a net loss. Totally possible to see negative values. But knowing that you have a minimum value that is that low at least starts to ha- allow you to ask the right questions. If Claude code encountered this in the wild, [00:19:00] you'd have no idea what to do with it without the context.
+
+[00:19:02] Speaker: So looking at these things allows you to have richer conversations with your clients. Next one is median. Median is helpful because it is not subject to noise. So if we ever look at things like average, which is your mean, average is very much skewed by very low numbers and very high numbers. Give you an example.
+
+[00:19:21] Speaker: If they give you the numbers zero, one, two, three, four, five thousand, your average will be very high, even though the majority of your numbers are very low. If you did the median of that exact same dataset, you would not get a very skewed number. You'd get the middle number by sorting from lowest to greatest and picking the exact m-middle.
+
+[00:19:42] Speaker: Median is easier to deal with, and it removes a lot of noise based on how it's designed and based on how it's executed. Again, sounds super boring, but only when you get into number crunching and looking for anomalies in the data, especially if your agent comes back and does a full analysis and says, "Yeah, your [00:20:00] average order value," in this case would be like one thousand five hundred or two thousand And you go and report that to an executive, a director, etc.,
+
+[00:20:09] Speaker: there's no nuance. So an agent might not have the nuance to go and take a look at all of the data and then decide, "Ah, it looks like there's anomalies here." Because let's say it is ten million rows or a million rows. You're not gonna put all of those rows into context. And even if you did, will it be smart enough to spin up some Python function to go through all the data to realize that?
+
+[00:20:31] Speaker: So this is why I always keep saying, in the next twelve to eighteen months, many admin and clerical jobs will get automated. I have no doubt about that, unfortunately. But cybersecurity and data engineers will still have employment because most companies don't have their data in order enough in order to do this kind of analysis.
+
+[00:20:51] Speaker: And you're not gonna find, even if it was a fifteen million context window, it would be still illogical and irrational [00:21:00] to employ the majority of that context window to just ingest data. So having this four-axis audit helps you understand the eighty/twenty of what data you're dealing with, what questions you have, and what might be missing from the client's underlying data, which leads to our conversation about discrete versus continuous.
+
+[00:21:18] Speaker: Again, continuous is anything where you can act- execute things like min, median, max, uh, spread. And then these are examples of continuous: amount, hours, uh, utilization, days since last touch point. And then discrete would be status, life cycle, source, client name, etc. So primarily discrete are textual-based things, categorical-based things.
+
+[00:21:42] Speaker: So country, province, um, nation, region, uh, like EMEA, APAC, etc. Those are discrete. So discrete, you can't split that with a, a knife. You can't split status of someone churned or active [00:22:00] into something else. So continuous, rule of hand, probably a number. Discrete can be a number too, but continuous is the one where you can split it with a knife.
+
+[00:22:09] Speaker: Hours obviously can be split into minutes, wh- which can be split into seconds, which can be split into milliseconds, microseconds, etc. And then like we said, having that hundred row rule, depending on the size of the data, you might need a thousand because maybe a hundred will not show you all the anomalies that you need to get a full eighty/twenty.
+
+[00:22:29] Speaker: And what might be helpful is, depending on the complexity of the company you're dealing with, the first hundred rows could be the last hundred rows, the next hundred rows could be the earliest hundred rows, and then the rest of it could be somewhere in the middle. So you can have a good understanding of different time horizons in that data.
+
+[00:22:47] Speaker: And now when I-- we talk about anatomy of a summary table, that's where it's really helpful to take a look at this and- Basically understand that the goal is to take really [00:23:00] large data sets and find a way to summarize them into literally a TLDR, where this is a dimension, that's a dimension. This is client and month, and then this is a fact.
+
+[00:23:10] Speaker: So a fact is basically an actual number, and you are synthesizing this number at this grain. When I say grain, it means instead of having daily data, we're now aggregating it to a monthly basis because it seems like your client might be asking questions that are all monthly related or quarterly related.
+
+[00:23:31] Speaker: If they're asking questions about the quarter and they want to ask questions about the month, what is a quarter? It is three months. So you would know, cool. For us to create a summary of this huge swath of data, we would want it at the month level so that we can s- uh, roll up or roll down as needed. As long as they don't need to ask questions about a week.
+
+[00:23:53] Speaker: If they need to ask questions about a week, then this should be at a week level because you can always roll up a week to a month to a quarter to a year. [00:24:00] Sounds a bit boring, but it's important to understand their language and to know exactly where the-- what time horizons their questions are related to.
+
+[00:24:11] Speaker: And then we usually have a timestamp where we say when this summary row was generated at. Okay? And then we have, in this case, charges. So this is all summarized at a very high level. Now, let's take a look at an actual example of a messy company. So if I go into our terminal here, I have a hypothetical example.
+
+[00:24:34] Speaker: So let's say we're dealing with a company that's called Bright Path Advisory, and we scroll this over right here, and let's zoom in. Give it a second here. I'll do before. So in the world of before, let's say we have all of these data sets. And honestly, I just asked Cloud Code to make me, uh, some messy data sets or some confusing data sets.
+
+[00:24:57] Speaker: So I'm gonna be taking a look at this for the first time with you, [00:25:00] assuming it decides to open in this, uh, hemisphere. All right, so it opened up on my other screen. I'll open it up here, and we'll zoom it in. All right. So, okay. So looks like we have a founder master tracker, and then we have engagement.
+
+[00:25:21] Speaker: Seems like some form of dimensional, discrete thing. We have client, so that's the name. We have status. We have owner. Okay, and then we have last touch. I already noticed something right away. We have some that are date time. So you can see h- how these are all at the, like, zero zero, and this one is at the day level.
+
+[00:25:45] Speaker: There's already a mismatch in the data here. We need to reconcile that before we actually process this data. And then the next step, it seems like we have some blanks. So what do we do when there are blanks? Do we fill that with something or not? Really depends. [00:26:00] MRR, looks like that's clean. I don't see any comma-separated values.
+
+[00:26:03] Speaker: Once in a while, I've had clients where you have different numbers with different denominations and different conversions. So you'll see euro, then US dollar, then you'll see yen, then you'll see rupee. So one, how do we normalize that? Normalize meaning do we make all of these apples, bananas, and oranges into apples?
+
+[00:26:21] Speaker: If so, w-when do we use the conversion rate as of? Do we just apply a general conversion rate as of today? Do we have to write this really complicated script where depending on when the record's date was, we try to go to some API that has a history of the exchange rate a-at that day from X to X and do the conversion?
+
+[00:26:43] Speaker: Once in a while, clients will say, "Listen, we'll give you a blanket exchange rate every week that you apply to the data." You just have to be aware that these are things that could pop up. Now notice here we have some completely blank rows. So the question would be: what do I do with these blank rows? Do I [00:27:00] remove them entirely?
+
+[00:27:01] Speaker: What's the reason that they're blank? Is this a data error? Is this an export error? So that's one. So let's close out of that and we'll go into the next one. So let's say this one is HubSpot contacts, and I'll open this up. So we'll just take a look at it in the numbers thing here. So we have record I- record ID.
+
+[00:27:22] Speaker: Okay. I'm just looking to see, is that populated? Yeah, it looks like it's populated. And then we have first name, we have last name, email. I like to always see really quick are all emails, do they have a proper suffix? And then company. We see some nulls here. A, a null again is a blank. And then we have life cy- life cycle stage.
+
+[00:27:46] Speaker: So these are sales stages, MQL, sales qualified lead. And then we have last activity date. So it looks like it is in local time zone. That's local TZ. We have some [00:28:00] blanks there, so what do we do in lieu of those blanks? And then if someone's an evangelist, why don't have a source? Okay, so maybe if-- there's-- that makes sense to have a blank source.
+
+[00:28:10] Speaker: Maybe there's no reference point. Maybe th-their attribution for where this client came from or this customer came from is nonexistent. This is fine. So I can tolerate nulls here 'cause that's possible. The same way if you sign up for a service and they ask you, "How, how did you find out about us?" It's totally possible you just skip that screen 'cause it's not, uh, required.
+
+[00:28:31] Speaker: So this looks normal. So HubSpot contacts looks fine. Now, Stripe payments. Again, this is all fictitious. This is not a real client. If I pull this over I already see a disaster. Okay. Uh, so we have ID, we have the date the transaction was created. We have the amount, the currency, the status, description. This is nasty.
+
+[00:28:58] Speaker: This is basically a JSON [00:29:00] of the transaction. You would never wanna ingest this into a database as is. You'd wanna parse this out, so we'd need to see what is worth parsing out. So client, we have that in the description, technically. Engagement ID. Why is this ID different from this ID? Is this just the transaction ID?
+
+[00:29:19] Speaker: And then we have the invoice ID, and then we have the consultant ID on this. And then we have the customer email. So the core questions would be like, what do we do with these? And also looks like PO box is only filled for a portion of them. Yeah. So most of my conversation would be about this call. What do we do with this?
+
+[00:29:41] Speaker: We don't wanna ingest JSON unless we absolutely have to, which is not ideal. I'll-- I can give you an example of when JSON makes sense. I used to do work for a company that specialized in chatbots before GPT even existed, and they stored all the conversations between them and their [00:30:00] clients in what's called a NoSQL database.
+
+[00:30:02] Speaker: NoSQL means there are no hard and fast rules around the structure of the columns and the rows. It's kinda like YOLO. It will grow as the data grows, so then you can keep ramming all kinds of new metadata into a column without having to always create brand-new columns to habit it. So in those cases, it might make sense to keep raw data in a JSON format because it evolves so often, so rapidly, and without a heads-up that it would be irresponsible to constantly map those fields into new columns.
+
+[00:30:37] Speaker: So very nuanced, really depends on the data. Just know that many times it's a Wild West, depending on the client. But the smaller the business, most likely, the easier the dataset. Now, it might be messier because a lot of small businesses use Google Sheets or CSVs or similar. So outside of that, life is pretty straightforward [00:31:00] unless you get into enterprise.
+
+[00:31:01] Speaker: That's where you find a lot of these messes. And medium businesses as well as startups that acquired a lot of funding very quickly, they will have gone from a small system to a much larger system because they've scaled from 100 to 1,000 employees, and you will see that reflected in their data, their practices, and their data practices, especially if they've had to go from not being SOC 2 compliant to becoming SOC 2 compliant.
+
+[00:31:23] Speaker: So there's a lot of devils in the details here. Now, time tracker. Uh, we have date. I just wanna check here. Are all of our dates in the same format? Yeah. Looks good. Hours, continuous data. You can see obviously it's a decimal. Billable. Now, the main rule is If you have hours, you have to have a, a value in billable, right?
+
+[00:31:46] Speaker: So how could we process information if we did not know that? So one thing you could obviously do is quickly go quick Excel course here. I should see no blanks. It's okay if I have blanks in hours, but not in [00:32:00] billable. And then we have notes. And the one thing I would need to know is, are you asking your agentic OS about something related to what's in the notes?
+
+[00:32:10] Speaker: Because if you are, then you or the client should know that if it comes to something like this, the agent's not gonna have much to say to you, or it will omit any information about this. I think that brings us to the majority of the data here. I think the last one is... Oh, we got some nasty QuickBooks-related stuff here.
+
+[00:32:30] Speaker: So it did a good job of making this more realistic. So let's zoom in. So we've got category and item. Okay, that's fine. We got P&L, uh, profit and loss. Looks very similar. Not worth taking a look at. So most of this data isn't too gnarly. It's just we have some questions. But one question you could ask Claude Code, because this data set is small enough, is something like this.
+
+[00:32:54] Speaker: And I would say, uh, refer to the, um, [00:33:00] BrightPath advisory before, and we'll send that over. So read Claude MD and tell me what the five sources are and what is unusual about each one. Then run an audit pass on raw Stripe payments, da, da, da, uh, using the four access framework. I want volume schema distribution in a hundred-row snippet saved somewhere sensible.
+
+[00:33:23] Speaker: Do not modify anything in raw. And then now it'll go through. Now it's conducting the audit. It's gonna create an audit folder. And it will give you, hopefully, a much richer description than what I did just visually, although we should come to very similar conclusions. And boom, within a minute, we have this audit complete.
+
+[00:33:45] Speaker: So it goes through and see right here. Eighteen thousand payment events, unusual client engagement, invoice consultant PO are buried in a JSON blob. There you go. My whole degree is now justified. Uh, raw time tracker, three sheets, one [00:34:00] per senior consultant, unusual. Each sheet has its own header conventions, three different date formats.
+
+[00:34:05] Speaker: Uh, da, da, da. And then HubSpot, twelve thousand contacts, unusual. HubSpot view headers are custom and noisy. First name cleaned, email, work, lifecycle two. Interesting. And then it goes through the QuickBooks. So it found things that I didn't find because I didn't count all the different columns and rows. So then you can ask it, what are great questions that I could ask based on this client, based on what they're asking me to ask of the data with this agentic OS that they want me to set up for them?
+
+[00:34:34] Speaker: So that would be examples of that. So that's on a small example of breaking down data at a high level. So if we keep rolling here, let's go into summary table land.
+
+[00:34:50] Speaker: So here's an example of instead of before, we now have the after version of this dataset. So let's say we had Claude Code go through and organize things, and it ran some [00:35:00] Python files. So curating the data, doing an audit of the data to go through everything that it found right now, and then it creates, let's say, summaries of the dataset.
+
+[00:35:08] Speaker: So instead of having four or five PNL files, now we have one centralized version that is at the month grain. So this is an example of the summary. So now it also tells you the source file. So if you wanna be able to reference where is this summary coming from, this aggregate, and you wanna cross-reference it, then you can.
+
+[00:35:29] Speaker: And luckily, you can ask Claude Code or similar to include this as a baked-in column. Then we have the generated at date of this row, and that's one example of a summary. Now, if we do revenue by client by month, same thing. Let's say we know they want it at a month grain, then this is each client, and here is the aggregated revenue USD.
+
+[00:35:52] Speaker: And then you just have a lot more quality control. So now if you hook up this agent to a table or a data source [00:36:00] like this via API, then you ask a question, how many rows do we have? Not too many. What is the-- What are the odds that your agent will hallucinate, assuming you're using something like Sonnet or above on medium to high-level effort?
+
+[00:36:13] Speaker: Fairly low. So by putting everything on a silver platter here, especially this utilization per consultant, everything is really well organized. And I see even further ways we can make this more detailed. So in this case, we have it at the week level. We could aggregate everything at the month level very easily by just saying, "Hey, listen, for anything for Dana, I want to look at it from a m- uh, monthly standpoint now or a quarterly standpoint."
+
+[00:36:39] Speaker: Then it would know to aggregate or create a dataset or, or a Python file to aggregate all of these different weeks to create a whole month. Because we also have the date that this was generated, so the agent would be able to know, okay, these are the generated at dates, these are the weeks. So even if we have multiple weeks for the same consultant, we'll be able to know by the [00:37:00] week number and the generated at date.
+
+[00:37:02] Speaker: So that becomes really easy. So this is a good example of a summary table. I'm just gonna delete this, and we'll go into here. Um, and then this is something that's called, uh, DuckDB, very similar to, let's say, SQLite in a different way. I can't open it up here, but it's basically a very light database where even in bigger companies, by the way, I've used DuckDB to store information instead of Something fancy.
+
+[00:37:33] Speaker: Very good database you could use, and a good example of how to, like, ask Claude Code to do this for you. If you want to host it somewhere like here or somewhere else, I'm just gonna run this and then cancel. Look at the Bright advisory after. The summaries folder has four CSVs already there. Load all four into a single DuckDB database called engagement.duckdb at the root, and then run a query that returns the top five clients by revenue.
+
+[00:37:59] Speaker: So if you [00:38:00] load raw data into a database, now, instead of asking Claude to sift through thousands of rows of data and destroying and bloating a context window, you can ask it to write a SQL query, SQL being again, the language where you can query a database, to go and search for that answer in a lot more mechanical ways.
+
+[00:38:17] Speaker: So you offload having to ram context by having Claude Code use its intelligence to come up with the perfect query to send to the database to get back the response. Now we have a much leaner way of talking to our data. So that's summary tables. Hopefully, you're still with me. So the real point of this is you want to take disparate data, files that are all over the place, and then audit, normalize.
+
+[00:38:46] Speaker: Normalize meaning you want to fix any data types, remove any anomalies, uh, fill in any NAs, or remove completely blank columns. Then you want to summarize them into different tables, [00:39:00] high-level tables, ideally at some grain level, like month, week, year, et cetera. And you could use DuckDB, you could use SQLite, you could use Supabase, you could use PostgreSQL, which Supabase again, is built on top of.
+
+[00:39:12] Speaker: And then you want to ask a question here, 'cause many times clients are very excited to create systems out of things, especially now in the world of vibe coding. So a good decision tree to ask yourself when it comes to should this even be a system is one, is this question worth answering more than once?
+
+[00:39:30] Speaker: Or is this a once-off from a CEO or a VP for a board report? If yes, does the answer change as the business changes? If yes, will more than one person or agent want to ask it on a recurring basis? If yes, then maybe it makes sense to build a system around it. So that could be a skill, a set of rules, a summary table, or all of the above.
+
+[00:39:52] Speaker: Many times, though, a lot of these questions that people ask are not questions they want to ask over and over again. Let's say twenty [00:40:00] percent will be something that are one-offs. Eighty percent could be recurring questions. You just want to be able to quickly delineate the difference between both. Next, now that we also not just deal with data, but now we deal with skills, many clients, I also have a video coming out about this- Many clients are obsessed with skills and are stacking so many skills that they're losing track.
+
+[00:40:23] Speaker: And then they come back saying, "Mark, you were wrong about Claude Code. This is not working. It's bloated. It's hard to sift through all the information. We have skills that are misfiring all the time. You're wrong. You're a bad teacher." In reality, though, it's actually a skill issue, pun intended. Reason being, they will generate three skills, two of which they'll forget about.
+
+[00:40:44] Speaker: They'll have audit CSV, audit Excel, and then audit source, even though the smart thing to do here is have an overall audit skill, because then that will not misfire, because it's mutually exclusive enough that it will not be invoked by accident. But that [00:41:00] takes experience to get used to. Then you'll fi- find things like build revenue summary, build customer summary, build utilization summary, when technically it should just be build summary with different compartments using progressive disclosure, which is only allowing Claude Code to take a look at different parts of that skill depending on the situation.
+
+[00:41:19] Speaker: So there would be a hashtag that says, "When analyzing revenue, use this," revenue summary. "When thinking-- talking about or thinking about client summaries, do this." So this can be very straightforward, and the goal is to lean down people's skill empires into very succinct. So you can see these slash commands have audit source and then path.
+
+[00:41:42] Speaker: Path would be, are we talking about customers? Are we talking about a different entity? Et cetera. And then rules are things that people either misuse or don't use at all. That's where you'd want to bring that in as well. So if you made it this far, you are a legend, and I commend you for sticking around, even though I know this is probably super [00:42:00] boring for you.
+
+[00:42:00] Speaker: But the TLDR is delivering AI projects at a small level where like, "Hey, listen, I'll set up this Vibe Coded app for you. I will build you this beautiful voice agent." That stuff is all adorable and cute. But when it comes to real projects, real things that you have to ship, you can never avoid the boogeyman, which is data engineering and d- doing rabbit hole deep dives into what lives underneath the hood.
+
+[00:42:29] Speaker: What are the skeletons in their closet? So all of this agentic stuff, again, super cool, very cute, but it is only as good as everything that is underneath, the parts that are-- that pretty much nobody sees. And the more prowess that you have, the more prowess you can apply to the situation. Most importantly, the more that you know the words, 'cause now I've told you words like summary table.
+
+[00:42:52] Speaker: I've told you words like data types, anomalies. As long as you know the vernacular, you can now offload a lot of that thinking to the [00:43:00] Claude code to help empower you to ask better questions, audit data in a different way, and also be aware of that, like this stuff is not a game. If- The back of house of any business or your business or your infrastructure is squeaky clean, and you don't have weird files and disparate files in different locations kind of sprawling.
+
+[00:43:20] Speaker: You don't have skill sprawls. Everything's easy because having an agent answer a question based on data that's pre-aggregated, pre-cleaned, and well-prepared is super straightforward. Everything underneath that isn't. So hopefully, this deeper dive on the agentic OS system, plus some teasers on data engineering, helps equip you with the right decision-making framework for you to actually go through and execute this well for yourself or others
+

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.4 — Discreto vs Contínuo | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span>
+            <span class="hidden sm:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span>
+            <span class="hidden sm:inline">Dicas Técnicas</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span>
+            <span class="hidden sm:inline">Projetos</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1 — Fundamentos</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.4</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.4
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📊 Discreto vs Contínuo — As Lentes de Análise</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">A distinção que muda o tipo de auditoria, o tipo de resumo, e o tipo de pergunta que você consegue responder. Uma classificação simples com impacto profundo em tudo que vem depois.</p>
+
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">6</div>
+          <div class="text-xs text-neutral-400">Tópicos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">30</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Iniciante</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Conceitual</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold">📈 O Que é Dado Contínuo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Dados contínuos podem assumir qualquer valor dentro de um intervalo. <strong class="text-emerald-400">São mensuráveis, fracionáveis e ordenáveis de forma matemática.</strong> A distância entre dois valores tem significado real — R$100 é exatamente o dobro de R$50.
+      </p>
+
+      <!-- Imagem -->
+      <div class="mb-6 rounded-xl overflow-hidden border border-dark-600">
+        <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_04_09.png" alt="Dados contínuos vs discretos" class="w-full object-cover max-h-80">
+      </div>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📈</span> Exemplos de Dados Contínuos
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Financeiro</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Receita: R$1.234,56</li>
+              <li>• Custo unitário: R$0,37</li>
+              <li>• Margem: 23,7%</li>
+              <li>• CAC: R$47,80</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Operacional</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Horas trabalhadas: 8,5h</li>
+              <li>• Kilowatts consumidos: 234,7 kWh</li>
+              <li>• Utilização de CPU: 73,4%</li>
+              <li>• Temperatura: 37,2°C</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Marketing</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Tempo no site: 4m 32s</li>
+              <li>• Taxa de conversão: 2,3%</li>
+              <li>• LTV: R$892,40</li>
+              <li>• ROAS: 3,7x</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Operações Válidas em Dados Contínuos
+        </h3>
+        <p class="text-neutral-300 mb-3">Para dados contínuos, operações estatísticas fazem sentido matemático pleno:</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Média</div>
+            <div class="text-xs text-neutral-400">tendência central</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Mediana</div>
+            <div class="text-xs text-neutral-400">resistente a outliers</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Desvio Padrão</div>
+            <div class="text-xs text-neutral-400">dispersão</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Percentis</div>
+            <div class="text-xs text-neutral-400">p25, p75, p90</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Min / Max</div>
+            <div class="text-xs text-neutral-400">range do dado</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Histograma</div>
+            <div class="text-xs text-neutral-400">distribuição</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold">🏷️ O Que é Dado Discreto</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Dados discretos têm valores distintos e contáveis. <strong class="text-emerald-400">Não existe "meio status" ou "1,5 países".</strong> A distância entre valores pode não ter significado matemático — "Brasil" e "EUA" não têm ordenação numérica natural.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🏷️</span> Exemplos de Dados Discretos
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Status / Estado</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Status do pedido: pendente, enviado, entregue, cancelado</li>
+              <li>• Status do cliente: ativo, inativo, suspenso</li>
+              <li>• Status da lead: qualificada, não-qualificada</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Categorias</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• País: Brasil, EUA, Alemanha...</li>
+              <li>• Categoria de produto: eletrodoméstico, móvel, roupa</li>
+              <li>• Canal de aquisição: orgânico, pago, referral</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-white mb-2">Ciclos / Estágios</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Ciclo de vida: lead → prospect → cliente → churned</li>
+              <li>• Etapa do funil: topo, meio, fundo</li>
+              <li>• Nível de plano: free, starter, pro, enterprise</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Operações Válidas em Dados Discretos
+        </h3>
+        <p class="text-neutral-300 mb-3">Para dados discretos, as operações são diferentes — e operar como se fossem contínuos gera resultados sem sentido:</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Count</div>
+            <div class="text-xs text-neutral-400">quantos registros</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Top-N</div>
+            <div class="text-xs text-neutral-400">mais frequentes</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Frequência</div>
+            <div class="text-xs text-neutral-400">% de cada valor</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Filtros</div>
+            <div class="text-xs text-neutral-400">WHERE status = 'ativo'</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Crosstab</div>
+            <div class="text-xs text-neutral-400">relação entre categorias</div>
+          </div>
+          <div class="bg-dark-700 rounded-lg p-3 text-center">
+            <div class="text-emerald-400 font-bold">Moda</div>
+            <div class="text-xs text-neutral-400">valor mais frequente</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold">🔬 Por Que a Distinção Muda a Auditoria</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A distinção discreto/contínuo não é só teórica — ela <strong class="text-emerald-400">define o checklist de auditoria que você vai executar</strong> e os problemas que vai procurar. Auditar um dado contínuo como discreto (e vice-versa) faz você perder os problemas reais.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h3 class="font-bold text-emerald-400 mb-4">📈 Auditoria de Dados Contínuos</h3>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Outliers extremos</strong>
+                <p class="text-sm text-neutral-400">Receita de R$999.999.999? Peso de -5kg? Valores impossíveis ou suspeitos.</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Zeros suspeitos</strong>
+                <p class="text-sm text-neutral-400">Horas trabalhadas = 0 em dias úteis. Receita = 0 em clientes ativos.</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Negativos impossíveis</strong>
+                <p class="text-sm text-neutral-400">Quantidade vendida = -3. Pode ser devolução ou pode ser erro.</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Distribuição</strong>
+                <p class="text-sm text-neutral-400">Bimodal quando deveria ser normal? Pico suspeito em número redondo?</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h3 class="font-bold text-emerald-400 mb-4">🏷️ Auditoria de Dados Discretos</h3>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Valores inválidos</strong>
+                <p class="text-sm text-neutral-400">Status = "atvo" (typo). País = "Brasil" e "Brazil" e "BR" — são o mesmo?</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Padronização</strong>
+                <p class="text-sm text-neutral-400">Maiúsculas/minúsculas mistas. Espaços extras no início/fim.</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Valores esperados vs observados</strong>
+                <p class="text-sm text-neutral-400">Se status só deveria ter 4 valores, por que tem 7 distintos?</p>
+              </div>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">→</span>
+              <div>
+                <strong>Valores NULL vs "não definido"</strong>
+                <p class="text-sm text-neutral-400">NULL é diferente de "N/A" é diferente de "" (string vazia) é diferente de "desconhecido".</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> O Erro de Tratar Discreto como Contínuo
+        </h3>
+        <p class="text-neutral-300">Calcular a "média de status de pedidos" em um banco onde status é codificado como inteiro (1=pendente, 2=enviado, 3=entregue) gera um número (ex: 2,3) que não tem nenhum significado. Mas o sistema não avisa — entrega 2,3 com confiança.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold">➗ Operações Válidas em Cada Tipo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A pergunta não é "o que eu posso calcular?" — é <strong class="text-emerald-400">"o que faz sentido calcular?"</strong> Qualquer banco de dados vai executar <code class="bg-dark-700 px-1 rounded text-emerald-400">AVG(pais_codigo)</code> sem erro. Mas o resultado não significa nada.
+      </p>
+
+      <!-- Tabela de operações -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/50">
+          <h3 class="font-semibold text-neutral-300">Guia de Operações por Tipo</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-dark-600">
+                <th class="text-left p-4 text-neutral-400 font-medium">Operação</th>
+                <th class="text-center p-4 text-emerald-400 font-medium">Contínuo</th>
+                <th class="text-center p-4 text-blue-400 font-medium">Discreto</th>
+                <th class="text-left p-4 text-neutral-400 font-medium">Observação</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr>
+                <td class="p-4 text-neutral-300">Média (AVG)</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-red-400 font-bold">✗</td>
+                <td class="p-4 text-sm text-neutral-500">Média de categorias não tem significado</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Mediana</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-yellow-400 font-bold">~</td>
+                <td class="p-4 text-sm text-neutral-500">Só se há ordenação natural (ex: níveis)</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Min / Max</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-yellow-400 font-bold">~</td>
+                <td class="p-4 text-sm text-neutral-500">Só se há ordenação (ex: datas, níveis)</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Soma (SUM)</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-red-400 font-bold">✗</td>
+                <td class="p-4 text-sm text-neutral-500">Soma de categorias não faz sentido</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Desvio Padrão</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-red-400 font-bold">✗</td>
+                <td class="p-4 text-sm text-neutral-500">Não há variância significativa em categorias</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Count / Frequência</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-sm text-neutral-500">Funciona para ambos</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Top-N valores</td>
+                <td class="p-4 text-center text-yellow-400 font-bold">~</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-sm text-neutral-500">Principal para discretos</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-neutral-300">Histograma / Distribuição</td>
+                <td class="p-4 text-center text-emerald-400 font-bold">✓</td>
+                <td class="p-4 text-center text-red-400 font-bold">✗</td>
+                <td class="p-4 text-sm text-neutral-500">Para discreto use bar chart de frequência</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A Pergunta Guia
+        </h3>
+        <p class="text-neutral-300">Antes de qualquer operação: <strong>"Essa operação matemática faz sentido nesse dado?"</strong> Se você não consegue explicar o significado do resultado em termos de negócio, provavelmente é o tipo errado de operação.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold">❓ Casos Ambíguos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Nem todo dado é obviamente contínuo ou discreto. <strong class="text-emerald-400">Casos ambíguos exigem uma decisão explícita</strong> sobre como tratar — e essa decisão precisa ser documentada e consistente em todo o sistema.
+      </p>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> O Teste da Faca
+        </h3>
+        <p class="text-neutral-300 mb-3"><strong>"Consigo cortar esse valor com uma faca?"</strong></p>
+        <ul class="space-y-2 text-neutral-300">
+          <li>→ <strong>Receita de R$100:</strong> sim, existe R$50, R$37,80, qualquer valor. <span class="text-emerald-400">Contínuo.</span></li>
+          <li>→ <strong>País de origem:</strong> não, não existe "meio Brasil". <span class="text-blue-400">Discreto.</span></li>
+          <li>→ <strong>Quantidade de pedidos:</strong> não, não existe 2,5 pedidos. <span class="text-blue-400">Discreto.</span></li>
+          <li>→ <strong>Temperatura:</strong> sim, existe 36,7°C, 36,8°C, qualquer valor. <span class="text-emerald-400">Contínuo.</span></li>
+        </ul>
+      </div>
+
+      <!-- Casos ambíguos detalhados -->
+      <div class="space-y-4 mb-6">
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-yellow-500">
+          <h4 class="font-semibold text-yellow-400 mb-2">Idade do Cliente</h4>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Biologicamente:</strong> contínua — existe 25,7 anos.</p>
+          <p class="text-sm text-neutral-300 mb-1"><strong>No dataset:</strong> geralmente armazenada como inteiro — 25, 26, 27...</p>
+          <p class="text-sm text-neutral-400"><strong>Decisão:</strong> Tratar como contínua para análises de distribuição (média de idade, percentis). Tratar como discreta para segmentação (faixa etária: 20-30, 30-40...).</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-yellow-500">
+          <h4 class="font-semibold text-yellow-400 mb-2">Tenure em Dias</h4>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Tecnicamente:</strong> discreto — são dias inteiros.</p>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Na análise:</strong> se o range é 0-3650 (10 anos), opera melhor como contínuo para médias, percentis e comparações.</p>
+          <p class="text-sm text-neutral-400"><strong>Decisão:</strong> Contínuo para análises. Discreto em buckets (0-90 dias, 91-365, 366+) para segmentação.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-yellow-500">
+          <h4 class="font-semibold text-yellow-400 mb-2">Nota de Satisfação (NPS, CSAT)</h4>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Escala:</strong> 1-10 com valores inteiros.</p>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Debate:</strong> É possível calcular média? Existe diferença constante entre 7 e 8?</p>
+          <p class="text-sm text-neutral-400"><strong>Decisão:</strong> Na prática, tratada como contínua para média (NPS usa isso). Mas análise de distribuição (quantos 9-10 vs quantos 1-6) pode ser mais informativa.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-yellow-500">
+          <h4 class="font-semibold text-yellow-400 mb-2">Número de Transações</h4>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Tecnicamente:</strong> discreto — não existe 2,5 transações.</p>
+          <p class="text-sm text-neutral-300 mb-1"><strong>Na análise:</strong> média de transações por cliente (3,7 transações/mês) é completamente válida e útil.</p>
+          <p class="text-sm text-neutral-400"><strong>Decisão:</strong> Discreto para a coluna bruta. Contínuo para métricas derivadas (média, mediana por período).</p>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> A Regra dos Casos Ambíguos
+        </h3>
+        <p class="text-neutral-300">Quando encontrar um caso ambíguo, não decida individualmente — documente a decisão e aplique consistentemente em todo o sistema. Se auditoria usa como contínuo e o agente usa como discreto, as análises serão incomparáveis.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold">🤖 Como Claude Code Trata Cada Tipo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Claude Code (e agentes de IA em geral) detectam o tipo de dado pela distribuição de valores e pelo tipo em Python/SQL. <strong class="text-emerald-400">Mas a classificação automática pode errar — e quando erra, erra silenciosamente.</strong> Entender isso permite que você guie o agente corretamente.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🤖</span> Detecção Automática de Tipo
+        </h3>
+        <div class="space-y-4 text-neutral-300">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 w-8 font-bold">→</span>
+            <div>
+              <strong class="text-white">dtype numérico (float64, int64)</strong> com muitos valores únicos
+              <span class="text-emerald-400"> → trata como contínuo</span>
+              <p class="text-sm text-neutral-400 mt-1">Gera: média, mediana, desvio padrão, histograma</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 w-8 font-bold">→</span>
+            <div>
+              <strong class="text-white">dtype object (string) ou poucos valores únicos</strong>
+              <span class="text-blue-400"> → trata como discreto</span>
+              <p class="text-sm text-neutral-400 mt-1">Gera: value_counts(), top-N, frequência relativa</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-yellow-400 w-8 font-bold">→</span>
+            <div>
+              <strong class="text-white">Inteiros com poucos valores únicos (ex: 1, 2, 3)</strong>
+              <span class="text-yellow-400"> → pode errar</span>
+              <p class="text-sm text-neutral-400 mt-1">Pode tratar código de status codificado como número como dado contínuo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Como Guiar o Agente Corretamente
+        </h3>
+        <p class="text-neutral-300 mb-3">A forma mais eficiente é fornecer metadados de schema. Quanto mais contexto, menos erro:</p>
+        <div class="bg-dark-700 rounded-lg p-4 font-mono text-sm">
+          <div class="text-neutral-500 mb-2"># Metadados para o agente</div>
+          <div class="text-emerald-400">schema = {</div>
+          <div class="text-neutral-300 ml-4">"receita_total": {"type": "continuous", "unit": "BRL", "min": 0},</div>
+          <div class="text-neutral-300 ml-4">"status_pedido": {"type": "discrete", "values": ["pendente", "enviado", "entregue", "cancelado"]},</div>
+          <div class="text-neutral-300 ml-4">"codigo_status": {"type": "discrete", "mapping": {1: "pendente", 2: "enviado", 3: "entregue"}}</div>
+          <div class="text-emerald-400">}</div>
+        </div>
+      </div>
+
+      <!-- Grid Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER para guiar o agente</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Documentar tipo de cada coluna no schema</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Listar valores válidos para discretas</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Especificar unidade e range para contínuas</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Incluir metadados no snippet da tabela</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Assumir que o agente vai classificar corretamente</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Usar inteiros para codificar categorias sem documentar</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Ignorar erros de classificação em análises exploratórias</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Deixar casos ambíguos sem decisão documentada</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 1.4
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Contínuo</strong>
+              <span class="text-neutral-400"> — fracionável, métricas matemáticas fazem sentido (receita, horas, temperatura)</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Discreto</strong>
+              <span class="text-neutral-400"> — categorias distintas, operações de frequência (status, país, ciclo de vida)</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Auditoria diferente</strong>
+              <span class="text-neutral-400"> — contínuo: outliers, zeros, negativos. Discreto: typos, padronização, valores inválidos</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Operações diferentes</strong>
+              <span class="text-neutral-400"> — contínuo: média/mediana/std. Discreto: count/top-N/frequência</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Casos ambíguos</strong>
+              <span class="text-neutral-400"> — décida explicitamente e documente. Consistência supera "perfeição"</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Metadados guiam agentes</strong>
+              <span class="text-neutral-400"> — schema documentado = agente que classifica corretamente e gera análises válidas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Você concluiu a Trilha 1!</h3>
+          <p class="text-neutral-300">Você tem agora a fundação conceitual de Engenharia de Dados com IA. A próxima trilha mergulha em dicas técnicas práticas — como implementar o que aprendeu aqui.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior
+          </a>
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ↑ Voltar para Trilha 1
+          </a>
+          <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próxima Trilha: Dicas Técnicas →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Eng. Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+
+    if (localStorage.getItem('theme') === 'light') {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+
+</body>
+</html>

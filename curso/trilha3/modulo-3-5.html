@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.5 Primitivos Corretos | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 — Visão Avançada</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.5</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.5</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">⚖️ Primitivos Corretos — Skill vs Regra vs Hook vs Script</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O "wrong primitive" é o erro mais silencioso da stack. Usar a ferramenta errada para o trabalho certo gera complexidade sem valor.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Framework</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">❌ O Conceito de "Wrong Primitive"</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Wrong primitive é quando você usa o mecanismo errado para o trabalho. O sistema parece funcionar na superfície — mas falha silenciosamente quando mais importa. É o tipo de erro mais difícil de diagnosticar porque o sintoma está distante da causa.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Exemplos de wrong primitives clássicos</h3>
+        <div class="space-y-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-start space-x-3">
+              <span class="text-red-400 font-bold">✗</span>
+              <div>
+                <p class="text-neutral-300 text-sm"><strong>Skill para formatar código</strong> — o agente às vezes formata, às vezes não. O correto é uma <strong class="text-purple-400">Regra no CLAUDE.md</strong>: "sempre formate o código com Prettier antes de apresentar". Regra é determinística. Skill não é.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-start space-x-3">
+              <span class="text-red-400 font-bold">✗</span>
+              <div>
+                <p class="text-neutral-300 text-sm"><strong>Regra para análise exploratória</strong> — análise exploratória é contextual, requer julgamento, adapta ao dataset. Uma regra genérica ("sempre analise assim") limita o agente. O correto é um <strong class="text-purple-400">Skill</strong> com progressive disclosure.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-start space-x-3">
+              <span class="text-red-400 font-bold">✗</span>
+              <div>
+                <p class="text-neutral-300 text-sm"><strong>Skill para gerar relatório diário</strong> — relatório diário é uma automação recorrente em horário fixo. O correto é um <strong class="text-purple-400">Script Python</strong> agendado via cron, completamente fora do LLM. Sem depender de sessão, sem variabilidade.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Por que é tão difícil de diagnosticar
+        </h3>
+        <p class="text-neutral-300">O wrong primitive funciona na maioria dos casos. O problema aparece nos 20% de edge cases — e só quando já está em produção. Um skill que deveria ser um hook vai funcionar 90% das vezes. Nos 10% restantes, vai falhar sem aviso e sem log. A causa: o LLM decidiu não invocar o skill porque o contexto era ligeiramente diferente.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">⚖️ Quando Usar Skill vs Regra vs Hook vs Script Python</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Cada primitivo tem um domínio claro. A tabela comparativa abaixo é o mapa mental que você vai usar para todas as decisões de arquitetura do seu Agentic OS.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Tabela comparativa dos 4 primitivos</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-dark-600">
+                <th class="text-left py-3 pr-4 text-purple-400 font-semibold">Primitivo</th>
+                <th class="text-left py-3 pr-4 text-purple-400 font-semibold">Natureza</th>
+                <th class="text-left py-3 pr-4 text-purple-400 font-semibold">Quando usar</th>
+                <th class="text-left py-3 text-purple-400 font-semibold">Não usar quando</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600/50">
+              <tr>
+                <td class="py-3 pr-4"><span class="text-purple-400 font-bold">Skill</span></td>
+                <td class="py-3 pr-4 text-neutral-400 text-xs">Sugestão ao LLM, contextual, pode não disparar</td>
+                <td class="py-3 pr-4 text-neutral-300 text-xs">Comportamentos que requerem julgamento e adaptação ao contexto</td>
+                <td class="py-3 text-neutral-400 text-xs">O comportamento precisa acontecer sempre, sem exceção</td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4"><span class="text-purple-400 font-bold">Regra</span></td>
+                <td class="py-3 pr-4 text-neutral-400 text-xs">Instrução persistente no CLAUDE.md, sempre ativa</td>
+                <td class="py-3 pr-4 text-neutral-300 text-xs">Comportamentos invariantes que se aplicam a toda sessão</td>
+                <td class="py-3 text-neutral-400 text-xs">O comportamento é específico de um contexto ou tarefa</td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4"><span class="text-purple-400 font-bold">Hook</span></td>
+                <td class="py-3 pr-4 text-neutral-400 text-xs">Código shell executado deterministicamente em eventos</td>
+                <td class="py-3 pr-4 text-neutral-300 text-xs">Ações que devem ocorrer em eventos específicos do sistema (pré/pós commit, pré-resposta)</td>
+                <td class="py-3 text-neutral-400 text-xs">A ação requer raciocínio ou adaptação contextual</td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4"><span class="text-purple-400 font-bold">Script Python</span></td>
+                <td class="py-3 pr-4 text-neutral-400 text-xs">Automação fora do LLM, determinística, agendável</td>
+                <td class="py-3 pr-4 text-neutral-300 text-xs">Processamento de dados, automações recorrentes, pipelines sem necessidade de LLM</td>
+                <td class="py-3 text-neutral-400 text-xs">O resultado precisa de linguagem natural ou adaptação</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A pergunta que elimina 30% dos skills desnecessários
+        </h3>
+        <p class="text-neutral-300 mb-2">Antes de criar qualquer skill, pergunte: <strong>"isso é determinístico?"</strong></p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><span class="text-primary">→</span> Se sim (mesma entrada = mesma saída sempre) → Hook ou Script Python</li>
+          <li><span class="text-primary">→</span> Se não (resultado varia com contexto) → Skill ou Regra</li>
+          <li><span class="text-primary">→</span> Se sim, mas precisa de contexto de sessão → Regra no CLAUDE.md</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🔄 Reverse Meta Prompting</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Reverse meta prompting é a técnica de usar o agente para melhorar seus próprios skills. Depois de uma sessão onde algo não funcionou bem, você não apenas corrige manualmente — você instrui o agente a auto-criticar e propor a melhoria.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">O prompt de reverse meta prompting</h3>
+        <div class="bg-dark-900/50 rounded-lg p-4 font-mono text-sm text-neutral-300 mb-4">
+          <p class="text-purple-400 mb-2"># Após uma sessão problemática:</p>
+          <p>"Reflita sobre como essa sessão foi. O skill [audit-source] foi usado,</p>
+          <p>mas ele não capturou o problema de encoding que encontramos.</p>
+          <br>
+          <p>Por favor:</p>
+          <p>1. Critique o skill atual contra o que ele falhou hoje</p>
+          <p>2. Proponha uma edição concreta ao skill que previniria essa falha</p>
+          <p>3. Me mostre o diff entre o skill atual e a versão proposta</p>
+          <p>4. Explique por que essa mudança melhora a cobertura"</p>
+        </div>
+        <p class="text-neutral-400 text-sm">O agente vai analisar sua própria performance, identificar lacunas na cobertura do skill, e propor adições específicas — como adicionar "## Quando arquivo tem problemas de encoding:" à seção de progressive disclosure.</p>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> 1% de melhoria por dia
+        </h3>
+        <p class="text-neutral-300">Melhore o skill 1% por dia. Em 30 dias, você terá um skill iron-clad. Não tente refatorar o skill completo de uma vez — pequenas melhorias incrementais depois de cada sessão onde algo falhou. O skill fica mais robusto organicamente, cobrindo edge cases reais, não hipotéticos.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🧪 O Teste "Run It Cold"</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O teste cold é simples e brutal: abra uma nova sessão sem qualquer contexto pré-carregado, envie o prompt que deveria disparar o skill, e observe se o skill é acionado corretamente. Se não disparar — a descrição precisa de mais triggers.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Por que o cold test é fundamental</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-red-400 text-sm font-semibold mb-2">Contexto de desenvolvimento</p>
+            <p class="text-neutral-300 text-sm">Você está na mesma sessão onde criou o skill. O agente tem contexto da criação. Vai disparar o skill com mais facilidade. O teste parece funcionar — mas é um ambiente artificial.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-purple-400 text-sm font-semibold mb-2">Contexto de produção (cold)</p>
+            <p class="text-neutral-300 text-sm">Sessão nova, sem contexto. O agente decide baseado apenas na descrição do skill e no prompt do usuário. Se a descrição for fraca, o skill não dispara. Esse é o cenário real.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">1</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Feche todas as sessões abertas</h4>
+            <p class="text-neutral-300 text-sm">Garanta que não há contexto residual de sessões anteriores que possa influenciar o teste.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">2</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Envie o prompt que deveria disparar o skill</h4>
+            <p class="text-neutral-300 text-sm">Use variações naturais da instrução — como um usuário real escreveria, não como você descreveu no skill.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">3</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Observe o comportamento sem intervenção</h4>
+            <p class="text-neutral-300 text-sm">Não ajude o agente. Se ele não disparou o skill, a descrição precisa melhorar. Se disparou, registre quais prompts funcionaram.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">4</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Itere na descrição do skill</h4>
+            <p class="text-neutral-300 text-sm">Adicione os prompts que falharam como exemplos na descrição do skill. "Exemplos que devem disparar este skill: [lista de prompts reais que falharam]"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">⚡ Skill como Sugestão vs Hook como Regra Determinística</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A distinção entre skill e hook é a mais crítica para comportamentos que precisam acontecer sempre. Um skill pode ser ignorado. Um hook não pode. Para segurança, compliance, e formatação obrigatória — hooks são a resposta correta.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">Skill — sugestão probabilística</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>O LLM decide se invoca baseado no contexto</span></li>
+            <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Pode ser ignorado se o contexto for ambíguo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Não tem garantia de execução</span></li>
+            <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Ideal: comportamentos adaptativos e contextuais</span></li>
+            <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Ex: "quando analisar dados, siga este checklist"</span></li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">Hook — garantia determinística</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Código shell executado no evento configurado</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Não depende de decisão do LLM</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Sempre executa, sem exceção</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Ideal: validações, formatação, logging obrigatórios</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Ex: validação de schema antes de cada commit</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">Casos de uso reais de hooks em Engenharia de Dados</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Pre-commit hook:</strong> Verificar se o script Python passa no linter antes de commitar para o repositório</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Pre-tool hook:</strong> Registrar em log toda vez que Claude Code escreve em um arquivo de dados</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Post-response hook:</strong> Notificar o Slack quando uma auditoria é concluída</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Pre-response hook:</strong> Verificar se a resposta contém PII antes de apresentar ao usuário</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🔍 Auditando Seu Stack Atual</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Todo stack acumula wrong primitives com o tempo. A auditoria periódica — idealmente mensal — é o que mantém o sistema saudável. Um stack auditado regularmente é mais confiável, mais rápido, e mais fácil de expandir.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">O processo de auditoria em 5 etapas</h3>
+        <div class="space-y-3">
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">1</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Inventário completo</p>
+              <p class="text-neutral-400 text-xs">Liste todos os skills, regras, hooks e scripts. Para cada um: nome, o que faz, quando foi criado, quando foi usado pela última vez.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">2</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Pergunta de primitivo para cada item</p>
+              <p class="text-neutral-400 text-xs">"Este é o primitivo correto?" Se não — identifique qual deveria ser e por quê.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">3</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Identificar itens obsoletos</p>
+              <p class="text-neutral-400 text-xs">Skills que não foram usados nos últimos 30 dias são candidatos à remoção. Pergunte: ainda é necessário? Se não — delete.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">4</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Migrar wrong primitives</p>
+              <p class="text-neutral-400 text-xs">Para cada wrong primitive identificado: criar o primitivo correto, migrar o comportamento, validar com cold test, deletar o original.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">5</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Documentar as decisões</p>
+              <p class="text-neutral-400 text-xs">Registre o que foi removido e por quê. Facilita o próximo ciclo de auditoria e evita recriar o que foi deliberadamente deletado.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Saúde do stack como métrica
+        </h3>
+        <p class="text-neutral-300">Trate a saúde do stack como uma métrica real: número de skills, taxa de disparo correto (estimada via cold tests), número de wrong primitives identificados, e tempo desde a última auditoria. Um stack saudável tem: menos de 10 skills, &gt;85% de taxa de disparo correto, e foi auditado nos últimos 30 dias.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Wrong primitive</strong><span class="text-neutral-400"> — falha silenciosa e difícil de diagnosticar, o erro mais perigoso do stack</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">4 primitivos</strong><span class="text-neutral-400"> — Skill (contextual), Regra (invariante), Hook (determinístico), Script (fora do LLM)</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Reverse meta prompting</strong><span class="text-neutral-400"> — o agente auto-critica e melhora seus próprios skills</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Cold test</strong><span class="text-neutral-400"> — sessão limpa, sem contexto, simula produção</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Skill vs Hook</strong><span class="text-neutral-400"> — probabilístico vs determinístico: usar hook quando não pode falhar</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Auditoria mensal</strong><span class="text-neutral-400"> — inventário, pergunta de primitivo, remoção de obsoletos, migração de wrong primitives</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">3.6 — 🏢 Enterprise vs PME — Migrações, SOC 2 e Big Data real: o que muda quando o cliente é enterprise</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-3-4.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-3-6.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.2 Devemos Construir um Sistema? | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 — Visão Avançada</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.2</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.2</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🌳 Devemos Construir um Sistema?</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O framework de decisão que separa sistemas que entregam valor de sistemas que só adicionam complexidade.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Framework</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <div class="mb-12 rounded-xl overflow-hidden border border-dark-600">
+      <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_04_35.png" alt="Devemos Construir um Sistema?" class="w-full object-cover max-h-72">
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">❓ A Pergunta Central</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Antes de escrever uma linha de código para um sistema, você precisa responder uma pergunta simples com honestidade brutal: <strong class="text-purple-400">essa pergunta vai ser feita mais de uma vez?</strong>
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> O mapa 20/80 das perguntas de negócio
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-dark-700/50 rounded-lg p-5">
+            <p class="text-neutral-400 text-sm font-semibold mb-2">20% das perguntas — one-off</p>
+            <ul class="space-y-2 text-neutral-300 text-sm">
+              <li>• "Quantas vendas fizemos no lançamento do produto X?"</li>
+              <li>• "Qual foi o LTV médio em 2023 para o board report?"</li>
+              <li>• "Análise de cohort dos usuários do beta?"</li>
+            </ul>
+            <p class="text-red-400 text-xs mt-3">→ Script único. Não precisa de sistema.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-5">
+            <p class="text-neutral-400 text-sm font-semibold mb-2">80% das perguntas — recorrentes</p>
+            <ul class="space-y-2 text-neutral-300 text-sm">
+              <li>• "Qual a utilização por consultor esta semana?"</li>
+              <li>• "Como está a receita vs meta do mês?"</li>
+              <li>• "Quais clientes não renovaram nos últimos 90 dias?"</li>
+            </ul>
+            <p class="text-purple-400 text-xs mt-3">→ Candidatos a sistema. Avaliar os outros critérios.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Exemplo Real
+        </h3>
+        <p class="text-neutral-300">CEO pede uma análise de LTV para um board report trimestral. Parece importante o suficiente para virar um sistema. Não é. É uma pergunta anual, com contexto único, para uma audiência específica. Um script de 50 linhas resolve em 20 minutos. Um sistema levaria 2 semanas e ficaria abandonado.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🔄 A Resposta Muda Conforme o Negócio Evolui?</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Mesmo que uma pergunta seja recorrente, se a lógica por trás dela muda frequentemente, automatizá-la prematuramente cria dívida técnica. O sistema precisa ser refatorado toda vez que o negócio muda — e em early stage, o negócio muda toda semana.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Lógica instável → Não automatizar ainda</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Definição de "cliente ativo" muda mensalmente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Métricas de sucesso sendo redefinidas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Produto em fase de descoberta (problem-market fit)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Pipeline de vendas mudando toda semana</span></li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">✓ Lógica estável → Candidato a sistema</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Cálculo de folha de pagamento (muda raramente)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Relatório de utilização de consultores</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Faturamento mensal com regras definidas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>KPIs que o board aprovou como fixos</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center">
+          <span class="mr-2">📐</span> O princípio YAGNI aplicado a dados
+        </h3>
+        <p class="text-neutral-300">YAGNI — "You Ain't Gonna Need It" — é a regra mais violada em projetos de dados. Construímos sistemas para perguntas que talvez apareçam, lógicas que talvez estabilizem, escalas que talvez cheguemos. Na maioria dos casos: não chegamos, não estabilizou, a pergunta nunca foi feita de novo.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">👥 Mais de Uma Pessoa Vai Usar Isso Regularmente?</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Escala de uso é o multiplicador de valor de qualquer sistema. Um sistema que você vai usar sozinho, uma vez por mês, quase nunca justifica o custo de construção. Quando múltiplos usuários (ou múltiplos agentes) precisam da mesma funcionalidade com frequência, o ROI começa a fazer sentido.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Exemplo concreto de ROI</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-400 text-sm font-semibold mb-2">Cenário 1 — NÃO vale o sistema</p>
+            <p class="text-neutral-300 text-sm">Você quer saber a utilização dos consultores. Pergunta 1x/mês, demora 10 min de script. Sistema levaria 2 semanas para construir. ROI: negativo por pelo menos 1 ano.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-400 text-sm font-semibold mb-2">Cenário 2 — VALE o sistema</p>
+            <p class="text-neutral-300 text-sm">10 gerentes querem ver utilização da equipe deles toda semana. 10 pessoas × 4x/mês × 10 min = 400 min/mês gastos em scripts. Sistema de 2 semanas se paga em 2 meses.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">💰 O Custo de Sistemas Prematuros</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A equação do sistema prematuro é brutal e silenciosa: <strong class="text-purple-400">maior complexidade → menos velocidade de mudança → menor valor entregue</strong>. Cada sistema que você constrói antes do momento certo se torna um âncora no produto.
+      </p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold text-sm">1</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Complexidade acidental</h4>
+            <p class="text-neutral-300 text-sm">O sistema resolve um problema que o script resolvia. Mas agora você tem: banco de dados para gerenciar, CI/CD para manter, migrations para controlar, logs para monitorar. O problema é o mesmo — a complexidade operacional triplicou.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold text-sm">2</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Velocidade de mudança</h4>
+            <p class="text-neutral-300 text-sm">O negócio pede uma mudança na lógica. No script: 5 minutos. No sistema: reunião de refinamento, estimativa, sprint, code review, deploy. O que seria uma conversa vira um projeto de 2 semanas.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold text-sm">3</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Custo de abandono</h4>
+            <p class="text-neutral-300 text-sm">6 meses depois, o negócio mudou de direção. O sistema está obsoleto. Mas como tem usuários e dados, ninguém quer desligar. Vira legacy antes de completar 1 ano. É mantido, nunca melhorado, até que cause um incidente.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> O cemitério de sistemas prematuros
+        </h3>
+        <p class="text-neutral-300">Toda empresa de médio porte tem um cemitério: sistemas construídos com entusiasmo, usados brevemente, e mantidos em modo zumbi porque desligar parece arriscado. Cada sistema nesse cemitério consome ~20% do tempo de um engenheiro em manutenção. 5 sistemas zumbi = 1 engenheiro inteiro ocupado com trabalho sem valor.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">📜 Quando um Script Único é Suficiente</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Existe um estigma cultural de que scripts são "solução de amador". Engenheiros sênior preferem arquiteturas elegantes. Na realidade, a elegância está em resolver o problema certo da forma mais simples possível — e scripts muitas vezes são exatamente isso.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Os 5 sinais de que um script é suficiente</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">1.</span>
+            <span>A pergunta só faz sentido neste contexto específico (board report, lançamento, auditoria pontual)</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">2.</span>
+            <span>Apenas você vai executar — e raramente</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">3.</span>
+            <span>A lógica ainda está sendo descoberta (você não sabe exatamente o que vai precisar)</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">4.</span>
+            <span>O resultado precisa de curadoria humana antes de ser apresentado</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">5.</span>
+            <span>O dado que alimenta a análise não existe em formato limpo ainda</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Scripts são descartáveis por design — e isso é uma vantagem
+        </h3>
+        <p class="text-neutral-300">Um script que você descarta depois de usar não tem custo de manutenção, não vira legacy, não precisa de documentação elaborada, não bloqueia ninguém. Ele resolve o problema, entrega o valor, e sai de cena. Essa leveza é uma feature, não um bug.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🌳 O Decision Tree Completo</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Com as perguntas certas respondidas, o decision tree completo define qual primitivo usar para cada necessidade. Da análise mais simples ao sistema mais complexo, existe uma resposta certa — e o framework ajuda a encontrá-la em minutos.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-6">O framework de decisão</h3>
+        <div class="space-y-3">
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold text-sm w-32 flex-shrink-0">Pergunta única?</span>
+            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Script Python</strong> descartável. Resolve, entrega, descarta.</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold text-sm w-32 flex-shrink-0">Recorrente, 1 pessoa?</span>
+            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Skill ou Regra</strong> no Agentic OS. Automação sem sistema.</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold text-sm w-32 flex-shrink-0">Recorrente, muitos?</span>
+            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Sistema simples</strong> (skill + tabela-resumo ou dashboard leve).</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold text-sm w-32 flex-shrink-0">Precisa de UI?</span>
+            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Sistema com frontend</strong>. Avalie custo vs valor com cuidado.</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold text-sm w-32 flex-shrink-0">Precisa histórico?</span>
+            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Sistema com banco</strong>. DuckDB para leitura, Postgres para escrita.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center">
+          <span class="mr-2">🎯</span> Exemplo de aplicação do decision tree
+        </h3>
+        <p class="text-neutral-300 mb-3">Equipe toda quer saber utilização por consultor toda semana:</p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li>✓ Pergunta recorrente? <span class="text-purple-400">Sim</span></li>
+          <li>✓ Mais de uma pessoa? <span class="text-purple-400">Sim — toda a equipe</span></li>
+          <li>✓ Lógica estável? <span class="text-purple-400">Sim — definição de utilização está fixada</span></li>
+          <li>✓ Precisa de UI? <span class="text-neutral-400">Não necessariamente</span></li>
+        </ul>
+        <p class="text-neutral-300 text-sm mt-3">Decisão: <strong class="text-purple-400">Skill + tabela-resumo</strong> atualizada automaticamente. Sistema leve, sem banco, sem frontend. Entrega 90% do valor com 10% da complexidade de um sistema completo.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Pergunta central</strong><span class="text-neutral-400"> — "vai ser feita mais de uma vez?" é o primeiro filtro</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Estabilidade de lógica</strong><span class="text-neutral-400"> — se muda toda semana, não é hora de automatizar</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Escala de uso</strong><span class="text-neutral-400"> — mais usuários = mais ROI de sistema</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Custo de sistema prematuro</strong><span class="text-neutral-400"> — complexidade, lentidão, legacy antes do tempo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Scripts são válidos</strong><span class="text-neutral-400"> — descartáveis por design, resolvem 80% dos casos</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Decision tree</strong><span class="text-neutral-400"> — script → skill/regra → sistema simples → sistema com banco/UI</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">3.3 — 📖 Data Dictionary — O documento que alimenta agentes e transforma auditoria em atividade de nível sênior</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-3-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-3-3.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

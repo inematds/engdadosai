@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2.3 — De Disparado para Unificado | Engenharia de Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Procedimentos</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Visão Avançada</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2 — Dicas e Procedimentos Técnicos</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.3</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.3</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔀 De Disparado para Unificado — Pipeline Passo a Passo</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">5 fontes bagunçadas, formatos incompatíveis, datas inconsistentes — e um warehouse limpo ao final. O procedimento completo em 5 passos que você aplica imediatamente.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">40</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Pipeline</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <div class="rounded-xl overflow-hidden border border-dark-600 mb-12">
+      <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_04_29.png" alt="Pipeline de Unificação" class="w-full object-cover max-h-80">
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🗂️ O Estado Inicial — 5 Fontes sem Padrão Comum</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Todo projeto começa aqui: <strong class="text-blue-400">dados caóticos de múltiplas origens</strong>. A tentação é ir direto para o código. O engenheiro experiente gasta 30 minutos entendendo o estado inicial antes de escrever uma linha — e economiza horas de retrabalho.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Inventário Inicial — O que mapear</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-3">
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Encoding:</strong> UTF-8, Latin-1 (ISO-8859-1), Windows-1252 — acentos quebrados indicam encoding errado</span></div>
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Separador:</strong> vírgula, ponto-e-vírgula, tab, pipe — detectar antes de pd.read_csv()</span></div>
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Formato de data:</strong> ISO 8601, DD/MM/YYYY, Unix timestamp, texto natural</span></div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Header:</strong> existe? Está na linha 1? Tem metadados nas primeiras linhas?</span></div>
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Chaves candidatas:</strong> qual coluna pode ser usada para juntar com outras fontes</span></div>
+            <div class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span class="text-neutral-300 text-sm"><strong>Granularidade:</strong> 1 linha = 1 transação? 1 cliente? 1 dia?</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span> Regra de Ouro</h3>
+        <p class="text-neutral-300">Nunca tente juntar fontes antes de entender cada uma individualmente. O JOIN parece funcionar mas os dados estão silenciosamente errados — e você só descobre quando o cliente faz uma pergunta que não fecha com o relatório do mês passado.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 — PASSO 1 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">1️⃣ Passo 1 — Auditar Cada Fonte Individualmente</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Aplicar os <strong class="text-blue-400">4 eixos de auditoria</strong> em cada fonte separadamente antes de qualquer tentativa de junção. Cada fonte recebe seu próprio relatório — com problemas identificados e anotação do que precisará de transformação.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Resultado Esperado — Tabela de Diagnóstico</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-dark-600">
+                <th class="text-left py-2 pr-4 text-neutral-400">Fonte</th>
+                <th class="text-left py-2 pr-4 text-neutral-400">Linhas</th>
+                <th class="text-left py-2 pr-4 text-neutral-400">Problemas</th>
+                <th class="text-left py-2 text-neutral-400">Chave Candidata</th>
+              </tr>
+            </thead>
+            <tbody class="space-y-1">
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">Stripe</td>
+                <td class="py-2 pr-4 text-neutral-300">18.000</td>
+                <td class="py-2 pr-4 text-yellow-400">JSON embutido em description</td>
+                <td class="py-2 text-neutral-300">customer_email</td>
+              </tr>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">HubSpot</td>
+                <td class="py-2 pr-4 text-neutral-300">12.000</td>
+                <td class="py-2 pr-4 text-red-400">47% nulos em "source"</td>
+                <td class="py-2 text-neutral-300">email</td>
+              </tr>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">Time Tracker</td>
+                <td class="py-2 pr-4 text-neutral-300">~8.000</td>
+                <td class="py-2 pr-4 text-red-400">3 formatos de data incompatíveis</td>
+                <td class="py-2 text-neutral-300">consultor_nome (normalizado)</td>
+              </tr>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">QuickBooks</td>
+                <td class="py-2 pr-4 text-neutral-300">~2.400</td>
+                <td class="py-2 pr-4 text-yellow-400">Schema muda a cada mês</td>
+                <td class="py-2 text-neutral-300">período (year_month)</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4 text-white font-medium">Founder Tracker</td>
+                <td class="py-2 pr-4 text-neutral-300">~500</td>
+                <td class="py-2 pr-4 text-yellow-400">Datas misturadas (3 formatos)</td>
+                <td class="py-2 text-neutral-300">client_id</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 — PASSO 2 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">2️⃣ Passo 2 — Normalizar Tipos, Datas e Moedas</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">A etapa de transformação mais trabalhosa: converter tudo para um padrão único. Datas para ISO 8601, moedas para uma base comum, tipos para os corretos. Cada decisão de normalização precisa ser <strong class="text-blue-400">documentada explicitamente</strong>.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Normalização de Moedas — 3 Opções</h3>
+        <div class="space-y-4">
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <h4 class="font-semibold text-white mb-1">Opção A — Taxa Fixa Atual</h4>
+            <p class="text-sm text-neutral-300 mb-1">Use a taxa de câmbio do dia de hoje para converter todos os históricos.</p>
+            <p class="text-xs text-neutral-500">Prós: simples, zero dependência externa. Contras: impreciso para análises históricas — $1.000 de 2020 não vale o mesmo que $1.000 de 2024.</p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <h4 class="font-semibold text-white mb-1">Opção B — Taxa da Data da Transação via API</h4>
+            <p class="text-sm text-neutral-300 mb-1">Buscar a taxa histórica exata para cada transação via API (ex: Open Exchange Rates, ECB).</p>
+            <p class="text-xs text-neutral-500">Prós: máxima precisão histórica. Contras: dependência de API externa, latência, custo, possível indisponibilidade.</p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <h4 class="font-semibold text-white mb-1">Opção C — Taxa Semanal Fornecida pelo Cliente ✓ Recomendada</h4>
+            <p class="text-sm text-neutral-300 mb-1">O cliente fornece uma tabela de taxas semanais ou mensais. Você aplica a taxa do período correspondente.</p>
+            <p class="text-xs text-neutral-500">Prós: alinhado com como o cliente controla internamente, sem dependência de API, razoavelmente preciso. Esta é a opção padrão para projetos de consultoria.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Normalização de Datas — Código Python</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code>import re
+from datetime import datetime
+
+def normalizar_data(valor):
+    if pd.isna(valor):
+        return pd.NaT
+    s = str(valor).strip()
+    # Unix timestamp
+    if re.match(r'^\d{10}$', s):
+        return pd.to_datetime(int(s), unit='s')
+    # DD/MM/YYYY
+    if re.match(r'^\d{2}/\d{2}/\d{4}$', s):
+        return pd.to_datetime(s, format='%d/%m/%Y')
+    # YYYY-MM-DD ou datetime
+    return pd.to_datetime(s, errors='coerce')
+
+df['date_normalized'] = df['data_original'].apply(normalizar_data)
+# Sempre salvar a coluna original
+# df['date_original'] permanece intacta</code></pre>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 — PASSO 3 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">3️⃣ Passo 3 — Criar IDs de Junção entre Tabelas</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Sem chave de junção confiável, qualquer análise cross-source é invenção. A maioria dos projetos reais <strong class="text-blue-400">não tem IDs universais</strong> — você precisa criar a chave a partir dos dados disponíveis.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Estratégias de chave</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span><strong>Email normalizado</strong> — lowercase + strip() funciona para ~90% dos projetos B2B</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span><strong>Hash de campos compostos</strong> — MD5(nome + empresa + domínio) para deduplicação</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span><strong>ID fornecido pelo cliente</strong> — se existe, sempre preferir sobre derivados</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span><strong>Surrogate key sequencial</strong> — ID novo gerado na fase de processamento</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Armadilhas de junção</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>JOIN por nome</strong> — "Acme Corp." ≠ "ACME Corp" ≠ "Acme" — fuzzy match obrigatório</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Fanout não-detectado</strong> — JOIN 1:N sem GROUP BY gera linhas duplicadas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>JOIN sem validar integridade</strong> — sempre checar linhas sem match antes de prosseguir</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+        <h3 class="text-lg font-semibold mb-4">Validação de Integridade Referencial</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code># Antes do JOIN, sempre verificar:
+# Quantos registros do Stripe NÃO têm match no HubSpot?
+sem_match = stripe_df[
+    ~stripe_df['email_norm'].isin(hubspot_df['email_norm'])
+]
+print(f"Registros sem match: {len(sem_match)} ({len(sem_match)/len(stripe_df)*100:.1f}%)")
+
+# Se > 10%: investigar antes de continuar
+# Se < 2%: documentar e prosseguir com LEFT JOIN</code></pre>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 — PASSO 4 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">4️⃣ Passo 4 — Eliminar Colunas Mortas</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Colunas mortas são <strong class="text-blue-400">artefatos de migrações passadas</strong> — existem no dataset mas nunca são usadas, frequentemente com 95%+ de nulos ou valor único constante. Eliminá-las é obrigatório antes de entregar um warehouse limpo.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Critérios para Eliminar</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Nulos &gt; 95%:</strong> df.isnull().mean() &gt; 0.95 — coluna essencialmente vazia</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Variância zero:</strong> df['col'].nunique() == 1 — valor único constante (ex: "BR" em todas as linhas)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Nomenclatura de migração:</strong> colunas "_old", "_backup", "_v1", "_legacy", "_deprecated"</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Duplicatas de colunas:</strong> "customer_id" e "client_id" com os mesmos valores — manter apenas um</span></li>
+        </ul>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Código — Detecção Automática de Colunas Mortas</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code>def detectar_colunas_mortas(df, threshold_nulos=0.95):
+    candidatas = []
+    for col in df.columns:
+        null_rate = df[col].isnull().mean()
+        unique_count = df[col].nunique()
+        is_legacy = any(s in col.lower() for s in
+                       ['_old', '_backup', '_v1', '_legacy', '_deprecated'])
+
+        if null_rate > threshold_nulos:
+            candidatas.append((col, f"Nulos: {null_rate:.1%}"))
+        elif unique_count <= 1:
+            candidatas.append((col, "Variância zero"))
+        elif is_legacy:
+            candidatas.append((col, "Nomenclatura de migração"))
+
+    return candidatas
+
+# SEMPRE documentar antes de eliminar
+colunas_mortas = detectar_colunas_mortas(df_processado)
+print("Candidatas à eliminação:", colunas_mortas)
+# Revisar manualmente, depois eliminar
+df_limpo = df_processado.drop(columns=[c[0] for c in colunas_mortas])</code></pre>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-5">
+        <p class="text-neutral-300 text-sm"><span class="text-red-400 font-semibold">⚠️ Atenção:</span> Sempre documente o que foi removido e por quê antes de deletar. Uma coluna com 96% de nulos pode ser crítica para os 4% de registros onde ela existe — verifique com o cliente antes de eliminar colunas que parecem "visivelmente vazias".</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 — PASSO 5 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">5️⃣ Passo 5 — Entregar o Warehouse Limpo e Documentado</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">O warehouse sem documentação é inútil em 6 meses. A documentação é <strong class="text-blue-400">parte do entregável</strong>, não um bônus. Sem ela, o próximo engenheiro (ou você mesmo) vai ter que refazer toda a auditoria.</p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Data Dictionary</h4>
+            <p class="text-neutral-300 text-sm">Para cada coluna: nome, tipo, descrição em linguagem natural, exemplo de valor, campo obrigatório (sim/não), e SLA de completude. Formato: CSV ou Markdown.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">README do Pipeline</h4>
+            <p class="text-neutral-300 text-sm">Instruções para reprocessar o pipeline do zero: quais arquivos de entrada, em que ordem rodar os scripts, quais variáveis de ambiente configurar, e o que verificar para confirmar que a carga foi bem-sucedida.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Registro de Decisões (ADR)</h4>
+            <p class="text-neutral-300 text-sm">Cada decisão não-óbvia documentada: "Usamos taxa de câmbio semanal fornecida pelo cliente porque X"; "Eliminamos a coluna Y porque 97% de nulos — validado com o cliente em 14/05/2026". Salvar em decisions.md.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Testes de Validação</h4>
+            <p class="text-neutral-300 text-sm">Scripts que verificam automaticamente o warehouse entregue: contagem de linhas esperada, ausência de nulos em campos obrigatórios, range de datas correto, totais financeiros batem com os relatórios-fonte.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">✅</span> Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Estado inicial mapeado</strong><span class="text-neutral-400"> — inventário de fontes antes de qualquer código</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Auditoria individual de cada fonte</strong><span class="text-neutral-400"> — 4 eixos aplicados antes do JOIN</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Normalização com decisões explícitas</strong><span class="text-neutral-400"> — taxa de câmbio, formato de data, separador decimal</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Chaves de junção criadas e validadas</strong><span class="text-neutral-400"> — integridade referencial checada antes do merge</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Colunas mortas identificadas e removidas</strong><span class="text-neutral-400"> — com documentação do que foi eliminado e por quê</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Warehouse entregue com documentação completa</strong><span class="text-neutral-400"> — data dictionary + README + decisões + testes</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">2.4 — Tabelas-Resumo + DuckDB: transformar dados brutos em tabelas que agentes consultam sem gastar tokens</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-2-4.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light') { themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

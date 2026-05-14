@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.6 Enterprise vs PME | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 — Visão Avançada</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.6</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.6</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🏢 Enterprise vs PME — Migrações, SOC 2 e Big Data</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">A realidade de projetos reais: o que muda quando o cliente é uma PME vs um enterprise, e como navegar os desafios de cada um.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Real</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">📊 A Diferença de Dados por Estágio de Empresa</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Os dados de uma empresa contam a história do seu crescimento. Startup, PME em crescimento e enterprise têm dados radicalmente diferentes — não apenas em volume, mas em estrutura, qualidade e complexidade. A abordagem de engenharia precisa mudar em cada estágio.
+      </p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">S</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold text-white">Startup — Simplicidade máxima</h4>
+              <span class="text-xs text-neutral-500">1-50 funcionários</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Características dos dados</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Google Sheets como banco de dados</li>
+                  <li>• CSVs exportados manualmente</li>
+                  <li>• Sem schema definido</li>
+                  <li>• Colunas crescem conforme a necessidade</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Abordagem correta</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Scripts Python rápidos</li>
+                  <li>• DuckDB para análise</li>
+                  <li>• Criar o data dictionary primeiro</li>
+                  <li>• Não over-engineer</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">P</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold text-white">PME com funding — Caos do crescimento</h4>
+              <span class="text-xs text-neutral-500">50-500 funcionários</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Características dos dados</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Cresceu de 100 para 1000 funcionários</li>
+                  <li>• Dados refletem o caos: 5 sistemas, 3 CRMs</li>
+                  <li>• IDs duplicados entre sistemas</li>
+                  <li>• "Cliente ativo" tem 4 definições diferentes</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Abordagem correta</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Auditoria extensa antes de qualquer análise</li>
+                  <li>• Definir um "sistema de verdade" único</li>
+                  <li>• Data dictionary como primeiro entregável</li>
+                  <li>• Pipeline de limpeza antes de qualquer modelo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">E</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold text-white">Enterprise — Processos e compliance</h4>
+              <span class="text-xs text-neutral-500">500+ funcionários</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Características dos dados</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Oracle, SAP, sistemas proprietários</li>
+                  <li>• Times de TI e Data Engineering dedicados</li>
+                  <li>• Dados regulatórios e de compliance</li>
+                  <li>• Data dictionary geralmente existe</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-neutral-400 text-xs font-semibold mb-1">Abordagem correta</p>
+                <ul class="space-y-1 text-neutral-300 text-sm">
+                  <li>• Seguir os processos existentes</li>
+                  <li>• Entender o ecosistema antes de propor mudanças</li>
+                  <li>• Compliance é não-negociável</li>
+                  <li>• Qualidade dos dados é geralmente melhor</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🏚️ Sistemas Legados: Oracle, SAP e Migrações</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Migrações de sistemas legados são os projetos mais complexos e arriscados de dados. Oracle e SAP têm esquemas proprietários com décadas de customizações, dados que refletem regras de negócio não escritas em lugar nenhum, e integrações que "apenas funcionam" sem que ninguém saiba exatamente como.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Os 3 pesadelos de uma migração enterprise</h3>
+        <div class="space-y-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-300 text-sm font-semibold mb-2">1. Regras de negócio implícitas nos dados</p>
+            <p class="text-neutral-400 text-sm">Um campo "status" com valores A, B, C, D, E. Ninguém lembra o que B significa — o engenheiro que criou saiu há 5 anos. A documentação existe mas está errada. Você vai descobrir o que B significa quando o cliente reclamar que algo quebrou na migração.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-300 text-sm font-semibold mb-2">2. Customizações do SAP/Oracle</p>
+            <p class="text-neutral-400 text-sm">O SAP standard tem 1000 tabelas. A customização desta empresa tem mais 300 tabelas Z* criadas ao longo de 20 anos. Cada uma resolve um problema de negócio específico, com lógica que não existe em nenhum manual.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-300 text-sm font-semibold mb-2">3. "Não pode parar"</p>
+            <p class="text-neutral-400 text-sm">O sistema legado processa R$50M/mês em transações. Não existe janela de manutenção longa o suficiente para fazer uma migração big-bang. Tudo tem que ser feito em shadow mode: os dois sistemas rodando em paralelo, comparando resultados, por meses.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A abordagem correta para migrações
+        </h3>
+        <p class="text-neutral-300 mb-2">Shadow mode + migração incremental. Nunca big-bang em sistemas críticos:</p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><span class="text-primary">1.</span> Mapear 100% do schema de origem com data dictionary</li>
+          <li><span class="text-primary">2.</span> Rodar os dois sistemas em paralelo (shadow mode) por 30-90 dias</li>
+          <li><span class="text-primary">3.</span> Comparar outputs automaticamente a cada ciclo</li>
+          <li><span class="text-primary">4.</span> Migrar módulos menores primeiro — aprender com o low-risk</li>
+          <li><span class="text-primary">5.</span> Ter rollback plan testado antes de cada fase</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🔒 SOC 2 Compliance e Engenharia de Dados</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        SOC 2 é um framework de certificação de segurança que certifica como uma organização gerencia dados de clientes. Para o engenheiro de dados, SOC 2 não é apenas segurança — é uma mudança completa na forma como dados são processados, armazenados e auditados.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">O que muda com SOC 2</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <div class="bg-dark-700/50 rounded-lg p-3">
+              <p class="text-purple-400 text-sm font-semibold">Audit Trail obrigatório</p>
+              <p class="text-neutral-300 text-xs">Cada acesso a dados sensíveis precisa ser registrado: quem acessou, quando, o que foi feito. Logs imutáveis, por no mínimo 1 ano.</p>
+            </div>
+            <div class="bg-dark-700/50 rounded-lg p-3">
+              <p class="text-purple-400 text-sm font-semibold">Access Control rigoroso</p>
+              <p class="text-neutral-300 text-xs">Principle of least privilege: cada pessoa acessa apenas o que precisa para seu trabalho. Nenhum acesso "só por precaução".</p>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-dark-700/50 rounded-lg p-3">
+              <p class="text-purple-400 text-sm font-semibold">Dados pessoais isolados</p>
+              <p class="text-neutral-300 text-xs">PII (Personally Identifiable Information) precisa ser isolado, criptografado, com acesso controlado e auditado separadamente.</p>
+            </div>
+            <div class="bg-dark-700/50 rounded-lg p-3">
+              <p class="text-purple-400 text-sm font-semibold">Mudanças versionadas</p>
+              <p class="text-neutral-300 text-xs">Toda mudança em schema, pipeline ou configuração de dados precisa passar por change management com aprovação e reversão documentada.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">O sinal dos dados: antes e depois do SOC 2</h3>
+        <p class="text-neutral-300 mb-3">Empresas que foram de não-compliance para SOC 2 terão dados drasticamente diferentes antes e depois. Essa transição aparece nos dados de formas claras:</p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li>• Campos de PII passam a ter hash ou pseudonymização</li>
+          <li>• Tabelas de acesso e log aparecem nos schemas</li>
+          <li>• Campos de audit (created_by, updated_by, timestamp) tornam-se obrigatórios</li>
+          <li>• Dados históricos pré-SOC2 podem ter qualidade diferente</li>
+        </ul>
+        <p class="text-neutral-400 text-sm mt-3">Se você está auditando dados de uma empresa que passou por essa transição, esteja preparado para tratar os dois períodos separadamente.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🌊 Big Data Real: Apache Spark</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Apache Spark é intimidador, finicky, e caro de operar. Para a maioria dos projetos, DuckDB é suficiente — e muito mais simples. Mas quando o volume real exige, Spark é a única ferramenta adequada.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Quando Spark é realmente necessário</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-neutral-400 text-sm font-semibold mb-3">Indicadores de que você precisa de Spark:</p>
+            <ul class="space-y-2 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-purple-400">•</span><span>Dataset não cabe em memória de uma única máquina (&gt;32GB)</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">•</span><span>Processamento em tempo real de streams de alta frequência</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">•</span><span>Joins de múltiplos datasets de bilhões de linhas</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">•</span><span>ML em escala com feature engineering pesado</span></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-neutral-400 text-sm font-semibold mb-3">Quando DuckDB resolve (a maioria):</p>
+            <ul class="space-y-2 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Análise de arquivos CSV/Parquet de até centenas de GB</span></li>
+              <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Queries ad-hoc e dashboards</span></li>
+              <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Text-to-SQL em datasets do mundo real</span></li>
+              <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Auditoria de dados e validação de qualidade</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-neutral-300 mb-3">Caso real: Coca-Cola e 10 bilhões de linhas</h3>
+        <p class="text-neutral-300 mb-3">Foi a primeira vez na minha vida que tive que lidar com esse volume. Intimidador. Cada query demorava minutos. DuckDB não funcionaria — não teria memória suficiente nem na máquina mais potente. Spark distribuído em cluster foi a única opção viável. Mas esse projeto foi exceção — 99% dos projetos em que trabalhei não chegaram nem perto desse volume.</p>
+        <p class="text-neutral-400 text-sm">A lição: não aprenda Spark "por precaução". Aprenda quando o problema real exigir. O overhead de configuração e manutenção não vale o custo se DuckDB resolve.</p>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> O custo real do Spark
+        </h3>
+        <p class="text-neutral-300">Mergulhe em Apache Spark apenas se o volume exigir. É intimidador, finicky, e caro de operar. Um cluster Spark bem configurado para produção custa facilmente R$20-100k/mês em infraestrutura. Mais o tempo de um engenheiro dedicado para mantê-lo. Para a maioria dos projetos, DuckDB é suficiente — e custa a infraestrutura de uma única máquina.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🗄️ NoSQL vs SQL — Quando Cada Um Faz Sentido</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        NoSQL surgiu quando aplicações web precisavam de schemas que evoluíam sem planejamento. É o YOLO de dados — cresce conforme os dados crescem, sem migration, sem schema fixo. SQL domina quando você precisa de consistência, joins e transações. A maioria dos projetos analíticos usa SQL.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">NoSQL — quando faz sentido</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Schema evolui frequentemente (features de produto em desenvolvimento)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Dados hierárquicos ou aninhados (JSON nativo)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Escala horizontal massiva com escrita intensiva</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Cache e sessões (Redis)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Busca full-text (Elasticsearch)</span></li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">SQL — quando faz sentido</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Analytics e relatórios com joins complexos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Dados financeiros com integridade transacional</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Schema estável e bem definido</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Text-to-SQL (o agente gera SQL, não queries NoSQL)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">✓</span><span>Compliance e auditoria (registros imutáveis)</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">O padrão híbrido mais comum em enterprise</h3>
+        <p class="text-neutral-300 mb-3">A maioria das empresas médias e grandes usa os dois:</p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><span class="text-blue-400">→</span> <strong>NoSQL (MongoDB/DynamoDB):</strong> Para a aplicação transacional — registros de usuário, sessões, configurações</li>
+          <li><span class="text-blue-400">→</span> <strong>SQL (PostgreSQL/Redshift):</strong> Para analytics — dados normalizados, agregações, relatórios</li>
+          <li><span class="text-blue-400">→</span> <strong>ETL entre os dois:</strong> Pipeline que migra dados do NoSQL para SQL periodicamente para análise</li>
+        </ul>
+        <p class="text-neutral-400 text-sm mt-3">O engenheiro de dados geralmente está nos dois pontos — e no ETL entre eles.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🎯 O que Esperar ao Entrar em um Projeto Enterprise</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O choque cultural de quem vem de startups é real. Processos que parecem burocracia excessiva existem por razões legítimas. Entender isso antes de entrar acelera a adaptação e evita atritos desnecessários com times que simplesmente estão seguindo regras que protegem a empresa.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">O que vai acontecer na primeira semana</h3>
+        <div class="space-y-3">
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">1</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Reuniões de alinhamento antes de tocar em qualquer dado</p>
+              <p class="text-neutral-400 text-xs">Você não vai abrir um terminal na primeira semana. Vai entender quem são os stakeholders, qual o escopo, quais dados estão no scope.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">2</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Acesso controlado por tickets</p>
+              <p class="text-neutral-400 text-xs">Para acessar qualquer dado, você abre um ticket. O ticket vai para aprovação do data owner, que vai para o time de segurança, que vai para o CISO. Pode levar 2-3 semanas. Planeje.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">3</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Documentação obrigatória de tudo</p>
+              <p class="text-neutral-400 text-xs">Cada análise que você faz precisa ser documentada. Cada script precisa de comentários. Cada pipeline precisa de runbook. Isso não é burocracia — é o que permite que outra pessoa mantenha seu trabalho quando você sair.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">4</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Dados de qualidade muito melhor</p>
+              <p class="text-neutral-400 text-xs">A compensação: enterprise tem times dedicados que garantem qualidade. Você vai encontrar o data dictionary pronto. O schema vai estar documentado. Os dados vão estar mais limpos do que qualquer PME que você trabalhou.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6 flex-shrink-0">5</span>
+            <div>
+              <p class="text-neutral-300 text-sm font-medium">Aprovações em múltiplos níveis para mudanças</p>
+              <p class="text-neutral-400 text-xs">Quer alterar uma query em produção? Tem que passar por code review, QA, staging, change advisory board. O que levaria 10 minutos em startup pode levar 2 semanas. Ajuste as expectativas do cliente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A mentalidade correta para projetos enterprise
+        </h3>
+        <p class="text-neutral-300">Não tente mudar a cultura. Entenda por que ela existe e trabalhe dentro dela. Os processos lentos protegem sistemas que processam bilhões de reais. Cada aprovação que parece desnecessária é o resultado de um incidente real que aconteceu antes de você chegar. Respeite o processo — e entregue valor dentro dele.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO FINAL -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">3 estágios de empresa</strong><span class="text-neutral-400"> — startup (Sheets), PME (caos de crescimento), enterprise (Oracle/SAP)</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Migrações legadas</strong><span class="text-neutral-400"> — shadow mode, incremental, rollback plan. Nunca big-bang em sistemas críticos</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">SOC 2</strong><span class="text-neutral-400"> — audit trail, access control, PII isolado, mudanças versionadas</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Apache Spark</strong><span class="text-neutral-400"> — use apenas quando o volume exigir. DuckDB resolve 99% dos casos</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">NoSQL vs SQL</strong><span class="text-neutral-400"> — NoSQL para apps transacionais em evolução, SQL para analytics e compliance</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Cultura enterprise</strong><span class="text-neutral-400"> — processos lentos existem por razões legítimas. Trabalhe dentro deles</span></div></div>
+        </div>
+
+        <!-- Checklist da Trilha -->
+        <div class="bg-dark-800/50 rounded-lg p-6 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-4">🎓 Você completou a Trilha 3 — Visão Avançada!</h3>
+          <p class="text-neutral-300 text-sm mb-4">Nesta trilha você aprendeu:</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">✂️ Skills lean-down — de 15 para 5 + 3 regras</span></div>
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">🌳 Framework de decisão para construir sistemas</span></div>
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">📖 Data Dictionary como contrato entre engenheiro e agente</span></div>
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">💬 Text-to-SQL com DuckDB — eficiência de contexto</span></div>
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">⚖️ Primitivos corretos — Skill vs Regra vs Hook vs Script</span></div>
+            <div class="flex items-center space-x-2"><span class="text-purple-400">✓</span><span class="text-neutral-300">🏢 Enterprise vs PME — SOC 2, Big Data e migrações</span></div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-3-5.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior
+          </a>
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">
+            ← Voltar para Trilha
+          </a>
+          <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            🏠 Página Inicial
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

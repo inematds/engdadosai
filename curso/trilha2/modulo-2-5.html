@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2.5 — Monitoramento e Gestão | Engenharia de Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Procedimentos</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Visão Avançada</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2 — Dicas e Procedimentos Técnicos</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.5</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.5</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">👁️ Monitoramento e Gestão de Dados — Passo a Passo</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Um pipeline que funciona hoje mas ninguém monitora vai quebrar silenciosamente. O guia completo para não ser pego de surpresa: do campo generated_at ao reprocessamento automatizado.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Ops</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🕐 O Campo generated_at</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">O <code class="bg-dark-700 px-2 py-0.5 rounded text-blue-400">generated_at</code> é o <strong class="text-blue-400">GPS temporal</strong> de cada tabela-resumo. Sem ele, você não sabe se está olhando para dados de ontem ou de seis meses atrás — e o agente também não.</p>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span> A Dica Mais Importante deste Módulo</h3>
+        <p class="text-neutral-300 mb-3">O <code class="bg-dark-700 px-1 rounded">generated_at</code> é o seu GPS temporal. Sem ele, você não sabe se está olhando para dados de ontem ou de seis meses atrás. Quando o agente responde ao cliente "a receita do mês passado foi $45.000", ele precisa poder dizer: "esses dados foram calculados em 14/05/2026 às 08:30."</p>
+        <p class="text-neutral-300">Um dado sem timestamp de geração é um dado sem contexto de validade.</p>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Implementação Correta</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code>from datetime import datetime, timezone
+
+# Ao criar qualquer tabela-resumo:
+generated_at = datetime.now(timezone.utc).isoformat()
+
+conn.execute(f"""
+  CREATE OR REPLACE TABLE revenue_by_client_month AS
+  SELECT
+    customer_email,
+    DATE_TRUNC('month', payment_date) AS month,
+    SUM(amount_usd) AS total_revenue_usd,
+    COUNT(*) AS transaction_count,
+    '{generated_at}'::TIMESTAMP AS generated_at  -- <-- OBRIGATÓRIO
+  FROM stripe_payments
+  WHERE status = 'succeeded'
+  GROUP BY customer_email, DATE_TRUNC('month', payment_date)
+""")
+
+# Também salvar metadados separadamente
+conn.execute(f"""
+  INSERT INTO pipeline_runs (table_name, generated_at, row_count, status)
+  VALUES (
+    'revenue_by_client_month',
+    '{generated_at}',
+    (SELECT COUNT(*) FROM revenue_by_client_month),
+    'SUCCESS'
+  )
+""")</code></pre>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Como o Agente Usa o generated_at</h3>
+        <p class="text-neutral-300 text-sm mb-3">No system prompt do agente, sempre incluir:</p>
+        <div class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 font-mono">
+          <p class="text-neutral-500"># System prompt do agente</p>
+          <p>Antes de responder qualquer pergunta sobre dados, sempre verifique:</p>
+          <p>SELECT MAX(generated_at) FROM revenue_by_client_month</p>
+          <p>Inclua o frescor dos dados na resposta: "Dados atualizados em: {data}"</p>
+          <p>Se gerado_at for mais de 26 horas atrás, avise o usuário que os dados podem estar desatualizados.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📝 Versionamento de Resumos</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Cada reprocessamento é uma nova versão. Sem versionamento, quando o cliente diz <strong class="text-blue-400">"os números mudaram desde ontem"</strong>, você não tem como comparar a versão atual com a anterior.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Estrutura da Tabela de Metadados</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code>CREATE TABLE IF NOT EXISTS pipeline_runs (
+  run_id VARCHAR DEFAULT gen_random_uuid(),
+  table_name VARCHAR NOT NULL,
+  generated_at TIMESTAMP NOT NULL,
+  row_count INTEGER,
+  status VARCHAR,   -- 'SUCCESS', 'FAILED', 'PARTIAL'
+  trigger_reason VARCHAR,  -- 'scheduled', 'manual', 'data_quality_fail'
+  notes TEXT,
+  PRIMARY KEY (run_id)
+);
+
+-- Comparar duas versões
+SELECT
+  r1.generated_at AS versao_atual,
+  r2.generated_at AS versao_anterior,
+  r1.row_count - r2.row_count AS delta_linhas
+FROM pipeline_runs r1
+JOIN pipeline_runs r2 ON r1.table_name = r2.table_name
+WHERE r1.table_name = 'revenue_by_client_month'
+ORDER BY r1.generated_at DESC
+LIMIT 2</code></pre>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Boas práticas de versionamento</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Manter histórico de pelo menos 30 versões</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Registrar motivo de cada reprocessamento</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Alertar se delta de linhas for > 10%</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Manter snapshots de versões suspeitas para investigação</span></li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h4 class="font-bold text-white mb-4">Rollback para versão anterior</h4>
+          <p class="text-neutral-300 text-sm mb-3">Quando o novo reprocessamento gera resultados suspeitos:</p>
+          <ol class="space-y-1 text-neutral-400 text-sm">
+            <li>1. Identificar a última versão válida via pipeline_runs</li>
+            <li>2. Restaurar o snapshot arquivado</li>
+            <li>3. Notificar o agente do rollback com motivo</li>
+            <li>4. Investigar a causa antes de reprocessar</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🚨 Sinais de Dado Podre</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Detectar antes que o agente detecte — ou pior, antes que o cliente detecte. Os <strong class="text-blue-400">4 sinais clássicos</strong> cobrem 95% das falhas reais de pipelines em produção.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start space-x-3">
+            <span class="text-2xl">📉</span>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Sinal 1 — Volume Anormal</h4>
+              <p class="text-sm text-neutral-400">Registros hoje vs média histórica saindo do range. Falha de ingestão gera queda abrupta; duplicação de dados gera pico.</p>
+              <p class="text-xs text-blue-400 mt-2">Threshold: &lt; média - 2σ ou &gt; média + 3σ</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start space-x-3">
+            <span class="text-2xl">🔄</span>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Sinal 2 — Schema Drift</h4>
+              <p class="text-sm text-neutral-400">Nova coluna aparece sem aviso, coluna existente some, tipo de dado muda. API do Stripe atualizou e adicionou um campo.</p>
+              <p class="text-xs text-blue-400 mt-2">Detectar: hash do schema atual vs hash esperado</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start space-x-3">
+            <span class="text-2xl">❓</span>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Sinal 3 — Aumento de Nulos</h4>
+              <p class="text-sm text-neutral-400">Percentual de nulos em colunas críticas subindo acima do baseline. Campo obrigatório ficou opcional na fonte.</p>
+              <p class="text-xs text-blue-400 mt-2">Threshold: null_rate &gt; baseline + 5pp</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start space-x-3">
+            <span class="text-2xl">🌡️</span>
+            <div>
+              <h4 class="font-semibold text-white mb-1">Sinal 4 — Valores Fora do Range</h4>
+              <p class="text-sm text-neutral-400">Receita negativa, datas futuras, idades impossíveis, percentuais acima de 100%. Erros de migração ou bug na fonte.</p>
+              <p class="text-xs text-blue-400 mt-2">Range check: BETWEEN expected_min AND expected_max</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+        <h3 class="text-lg font-semibold mb-4">Script de Verificação de Qualidade</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-sm text-neutral-300 overflow-x-auto"><code>def verificar_qualidade(conn, table_name):
+    checks = {}
+
+    # Volume
+    row_count = conn.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
+    checks['volume'] = {'valor': row_count, 'status': 'OK'}
+
+    # Nulos em colunas críticas
+    null_rate = conn.execute(f"""
+        SELECT AVG(CASE WHEN total_revenue_usd IS NULL THEN 1.0 ELSE 0.0 END)
+        FROM {table_name}
+    """).fetchone()[0]
+    checks['null_rate'] = {
+        'valor': f"{null_rate*100:.1f}%",
+        'status': 'FAIL' if null_rate > 0.05 else 'OK'
+    }
+
+    # Range de valores
+    neg_revenue = conn.execute(f"""
+        SELECT COUNT(*) FROM {table_name}
+        WHERE total_revenue_usd < 0
+    """).fetchone()[0]
+    checks['range'] = {
+        'valor': f"{neg_revenue} negativos",
+        'status': 'FAIL' if neg_revenue > 0 else 'OK'
+    }
+
+    return checks</code></pre>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">📋 SLA de Dados</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">SLA (Service Level Agreement) de dados é o <strong class="text-blue-400">contrato interno</strong> que transforma "acho que tá funcionando" em "está dentro do contrato" ou "está fora do contrato".</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Exemplo de SLA para o Projeto BrightPath</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-dark-600">
+                <th class="text-left py-2 pr-4 text-neutral-400">Dimensão</th>
+                <th class="text-left py-2 pr-4 text-neutral-400">Contrato</th>
+                <th class="text-left py-2 text-neutral-400">Ação se violado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">Frequência</td>
+                <td class="py-2 pr-4 text-neutral-300">Atualização diária até 08h UTC</td>
+                <td class="py-2 text-yellow-400">Alertar engenheiro</td>
+              </tr>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">Frescor</td>
+                <td class="py-2 pr-4 text-neutral-300">Dados nunca mais velhos que 26h</td>
+                <td class="py-2 text-red-400">Bloquear respostas do agente</td>
+              </tr>
+              <tr class="border-b border-dark-600/50">
+                <td class="py-2 pr-4 text-white font-medium">Completude</td>
+                <td class="py-2 pr-4 text-neutral-300">&gt; 98% em colunas críticas</td>
+                <td class="py-2 text-yellow-400">Alertar e reprocessar</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4 text-white font-medium">Volume mínimo</td>
+                <td class="py-2 pr-4 text-neutral-300">&gt; 80% da média histórica</td>
+                <td class="py-2 text-red-400">Reprocessar automaticamente</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🤖 Automando Reprocessamento com Claude Code</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Monitoramento manual é insustentável. Um agente que <strong class="text-blue-400">detecta e reage automaticamente</strong> elimina o trabalho repetitivo e garante SLA mesmo durante fins de semana.</p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Script de verificação com saída estruturada</h4>
+            <p class="text-neutral-300 text-sm mb-3">O script roda verificações e retorna JSON com status OK/FAIL + detalhes. Claude Code analisa o JSON e decide se reprocessar.</p>
+            <pre class="bg-dark-900 rounded-lg p-3 text-xs text-neutral-300"><code># verify_pipeline.py — saída JSON obrigatória
+import json, sys
+checks = verificar_qualidade(conn, 'revenue_by_client_month')
+failed = [k for k, v in checks.items() if v['status'] == 'FAIL']
+result = {'status': 'FAIL' if failed else 'OK', 'failed_checks': failed, 'details': checks}
+print(json.dumps(result))
+sys.exit(1 if failed else 0)</code></pre>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Prompt para Claude Code — Agente de Monitoramento</h4>
+            <div class="bg-dark-900 rounded-lg p-3 text-xs text-neutral-300 font-mono">
+              <p>Você é o agente de monitoramento do pipeline de dados da BrightPath.</p>
+              <p>Execute: python verify_pipeline.py</p>
+              <p>Se status == 'FAIL': execute python reprocess_pipeline.py --force</p>
+              <p>Após reprocessar: execute verify_pipeline.py novamente</p>
+              <p>Se ainda FAIL: notifique o engenheiro com diagnóstico completo</p>
+              <p>Registre todas as ações em pipeline_runs com trigger_reason='auto'</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Notificação — o que incluir</h4>
+            <p class="text-neutral-300 text-sm">Severidade + causa + ação tomada + próximos passos. Nunca apenas "algo quebrou". Exemplo: "CRITICAL: null_rate em revenue subiu para 8.3% (SLA: &lt;5%). Tentativa de reprocessamento às 03:47 falhou. Causa provável: API Stripe com timeout. Ação: bloqueei respostas do agente sobre receita. Aguardando intervenção manual."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">📖 Documentando o Pipeline</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Documentação bem feita permite que outro engenheiro (ou o próprio agente) mantenha o pipeline sem precisar de você. É a diferença entre um projeto <strong class="text-blue-400">sustentável</strong> e um projeto que só você consegue operar.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h4 class="font-semibold text-blue-400 mb-4">CLAUDE.md — O inventário do agente</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Lista de todas as fontes de dados com localização</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Anomalias conhecidas em cada fonte</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Decisões de processamento documentadas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>SLAs de cada tabela-resumo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Contato para escalada humana</span></li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h4 class="font-semibold text-blue-400 mb-4">Runbook de Emergência</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Passo a passo para reprocessamento manual</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Como fazer rollback para versão anterior</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Como bloquear o agente de responder dados suspeitos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Critério de quando escalar para humano</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4">Diagrama de Fluxo do Pipeline</h3>
+        <div class="flex items-center justify-between text-sm text-center">
+          <div class="bg-dark-800 rounded-lg p-3 border border-dark-600 flex-1"><div class="text-blue-400 font-bold mb-1">FONTES</div><div class="text-neutral-400 text-xs">Stripe, HubSpot,<br>QuickBooks, etc.</div></div>
+          <div class="text-neutral-600 mx-2">→</div>
+          <div class="bg-dark-800 rounded-lg p-3 border border-dark-600 flex-1"><div class="text-yellow-400 font-bold mb-1">RAW</div><div class="text-neutral-400 text-xs">Dados originais<br>imutáveis</div></div>
+          <div class="text-neutral-600 mx-2">→</div>
+          <div class="bg-dark-800 rounded-lg p-3 border border-dark-600 flex-1"><div class="text-blue-400 font-bold mb-1">PROCESSED</div><div class="text-neutral-400 text-xs">Normalizados<br>e unificados</div></div>
+          <div class="text-neutral-600 mx-2">→</div>
+          <div class="bg-dark-800 rounded-lg p-3 border border-dark-600 flex-1"><div class="text-emerald-400 font-bold mb-1">SUMMARY</div><div class="text-neutral-400 text-xs">Tabelas-resumo<br>+ DuckDB</div></div>
+          <div class="text-neutral-600 mx-2">→</div>
+          <div class="bg-dark-800 rounded-lg p-3 border border-dark-600 flex-1"><div class="text-purple-400 font-bold mb-1">AGENTE</div><div class="text-neutral-400 text-xs">Consulta e<br>responde</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">✅</span> Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">generated_at obrigatório</strong><span class="text-neutral-400"> — toda tabela-resumo precisa de timestamp de geração</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Versionamento documentado</strong><span class="text-neutral-400"> — histórico de reprocessamentos com motivo e delta</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">4 sinais de dado podre</strong><span class="text-neutral-400"> — volume, schema drift, nulos, range — detectados antes do cliente</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">SLA com critérios numéricos</strong><span class="text-neutral-400"> — frequência, frescor, completude, volume mínimo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Reprocessamento automático</strong><span class="text-neutral-400"> — Claude Code detecta, reprocessa e notifica sem intervenção humana</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Documentação sustentável</strong><span class="text-neutral-400"> — CLAUDE.md + runbook permitem que qualquer engenheiro opere o pipeline</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">2.6 — Painel de Monitoramento e Alertas: da teoria ao painel real com visibilidade completa</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-2-4.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-2-6.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light') { themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

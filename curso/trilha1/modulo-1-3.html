@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.3 — A Pirâmide de Dados | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span>
+            <span class="hidden sm:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span>
+            <span class="hidden sm:inline">Dicas Técnicas</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span>
+            <span class="hidden sm:inline">Projetos</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1 — Fundamentos</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.3</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.3
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔺 A Pirâmide de Dados</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">As 4 camadas que transformam CSV bagunçado em decisão de negócio. Cada nível da pirâmide alimenta o próximo — e cada falha se propaga para cima.</p>
+
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">6</div>
+          <div class="text-xs text-neutral-400">Tópicos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">30</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Iniciante</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Arquitetura</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Visualização da pirâmide -->
+    <div class="mb-12 rounded-xl overflow-hidden border border-dark-600">
+      <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_03_55.png" alt="Pirâmide de dados" class="w-full object-cover max-h-96">
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold">📁 Camada Base: Fontes Brutas</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A base da pirâmide sustenta tudo que existe acima. <strong class="text-emerald-400">Se a base está podre, a pirâmide inteira desmorona</strong> — não importa quão bem você construiu as camadas superiores. O primeiro passo em qualquer projeto é entender o que existe aqui.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📁</span> O que vive na Base da Pirâmide
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="font-medium text-white mb-2">Formatos de Arquivo</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• CSV — simples mas perigoso (delimitadores, encoding)</li>
+              <li>• XLSX — dados + formatação + macros misturados</li>
+              <li>• PDF — dados "para ver", não "para processar"</li>
+              <li>• JSON/XML — APIs e sistemas web</li>
+              <li>• Parquet — colunar, eficiente, moderno</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-medium text-white mb-2">Fontes de Sistema</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• ERP — SAP, Oracle, TOTVS, dados de décadas</li>
+              <li>• CRM — Salesforce, HubSpot, dados de vendas</li>
+              <li>• E-commerce — Shopify, WooCommerce, pedidos</li>
+              <li>• Marketing — Google Analytics, Meta Ads</li>
+              <li>• Financeiro — exportações contábeis, bancos</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> O Inventário é Obrigatório
+        </h3>
+        <p class="text-neutral-300">Antes de qualquer processamento, você precisa saber: quais fontes existem, quem é o dono de cada uma, com que frequência são atualizadas, e qual é a confiabilidade histórica. Sem inventário, você descobre a metade das fontes no meio do projeto.</p>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Regra da Base
+        </h3>
+        <p class="text-neutral-300">Trate cada fonte bruta como suspeita até que você prove o contrário. Nunca assuma que um arquivo CSV está correto só porque alguém disse que está. Audite sempre antes de processar.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold">🔍 Camada 2: Auditoria</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Antes de limpar qualquer coisa, você precisa entender o que está limpando. <strong class="text-emerald-400">Auditoria é o diagnóstico médico dos dados</strong> — sem diagnóstico, você opera no escuro e trata a doença errada.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🔍</span> O Checklist de Auditoria
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">1.</span>
+            <div>
+              <strong class="text-white">Shape</strong> — quantas linhas e colunas? Condiz com o esperado?
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">2.</span>
+            <div>
+              <strong class="text-white">Tipos de dado</strong> — colunas numéricas como object? Datas como string?
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">3.</span>
+            <div>
+              <strong class="text-white">Null count por coluna</strong> — qual % de nulos? Distribuição é esperada?
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">4.</span>
+            <div>
+              <strong class="text-white">Valores únicos</strong> — quais são os valores possíveis em colunas categóricas?
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">5.</span>
+            <div>
+              <strong class="text-white">Duplicatas</strong> — existem linhas duplicadas? Duplicatas na chave primária?
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">6.</span>
+            <div>
+              <strong class="text-white">Range de valores</strong> — há valores impossíveis? (receita negativa, idade = 200)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">🛠️</span> Ferramentas de Auditoria
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong>DuckDB SQL</strong> — <code class="bg-dark-700 px-1 rounded text-blue-400">SELECT COUNT(*), COUNT(DISTINCT id)</code> para auditar direto</li>
+          <li><strong>pandas</strong> — <code class="bg-dark-700 px-1 rounded text-blue-400">df.describe()</code>, <code class="bg-dark-700 px-1 rounded text-blue-400">df.isnull().sum()</code>, <code class="bg-dark-700 px-1 rounded text-blue-400">df.dtypes</code></li>
+          <li><strong>ydata-profiling</strong> — relatório completo de auditoria em uma linha de código</li>
+          <li><strong>Claude Code</strong> — pedir análise exploratória automatizada com decisões documentadas</li>
+        </ul>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Quando a Auditoria Falha
+        </h3>
+        <p class="text-neutral-300">Pular auditoria e ir direto para limpeza é como um médico que opera sem diagnóstico. Você vai remover coisas que não deveria e deixar problemas que não viu. A auditoria documentada também serve como contrato: "no início do projeto, os dados estavam assim."</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold">📋 Camada 3: Snippets</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Snippets são amostras representativas dos dados — tipicamente 100 linhas cuidadosamente selecionadas de cada tabela. <strong class="text-emerald-400">São o "cartão de visita" dos dados para sistemas de IA.</strong> Em vez de jogar 1 milhão de linhas no contexto, você fornece 100 bem escolhidas.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📋</span> O que são Snippets Bons vs Ruins
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium text-red-400 mb-2">✗ Snippet Ruim (100 linhas aleatórias)</h4>
+            <p class="text-sm text-neutral-300">Amostra aleatória pode sobre-representar o caso comum e não mostrar os edge cases. Um agente que vê 100 clientes ativos pode não saber que existe um status "suspenso" que aparece em 2% dos casos — mas é crítico.</p>
+          </div>
+          <div>
+            <h4 class="font-medium text-emerald-400 mb-2">✓ Snippet Bom (100 linhas curadas)</h4>
+            <p class="text-sm text-neutral-300">Representa todos os valores únicos de colunas categóricas, inclui casos extremos de colunas numéricas, cobre diferentes períodos de tempo, mostra exemplos de nulos onde existem.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A Regra dos Snippets
+        </h3>
+        <p class="text-neutral-300 mb-3">100 linhas bem escolhidas > 1 milhão de linhas aleatórias para dar contexto a um agente. Curadoria supera volume quando o objetivo é contexto.</p>
+        <p class="text-neutral-300">Um agente que viu um bom snippet de uma tabela de clientes entende os padrões, os casos especiais e os limites dos dados sem precisar processar tudo. Isso reduz custo de token e aumenta precisão.</p>
+      </div>
+
+      <!-- Grid de critérios -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <h4 class="font-semibold text-emerald-400 mb-3">Critérios para incluir no snippet</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Pelo menos 1 exemplo de cada valor categórico</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Exemplos com nulos nas colunas que têm nulos</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Min e max de colunas numéricas</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Registros mais antigos e mais recentes</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <h4 class="font-semibold text-emerald-400 mb-3">Como usar snippets</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Incluir no prompt de sistema do agente</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Usar para validar se o agente entendeu o schema</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Atualizar quando o schema mudar</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">•</span>
+              <span>Combinar com descrição de cada coluna</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold">📊 Camada 4: Resumos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Resumos são tabelas pré-calculadas que agregam os dados brutos em métricas úteis. <strong class="text-emerald-400">São o resultado da modelagem dimensional</strong> — onde tabelas fato registram o que aconteceu e tabelas dimensão fornecem o contexto.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Tabelas Fato vs Tabelas Dimensão
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-emerald-400 mb-2">Tabela Fato — O Que Aconteceu</h4>
+            <p class="text-sm text-neutral-300 mb-2">Registra eventos com métricas mensuráveis.</p>
+            <ul class="space-y-1 text-sm text-neutral-400">
+              <li>• fato_vendas (pedido_id, cliente_id, produto_id, valor, data)</li>
+              <li>• fato_acesso (sessao_id, usuario_id, pagina_id, tempo, data)</li>
+              <li>• fato_producao (turno_id, maquina_id, quantidade, refugo, data)</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <h4 class="font-medium text-blue-400 mb-2">Tabela Dimensão — O Contexto</h4>
+            <p class="text-sm text-neutral-300 mb-2">Fornece atributos descritivos para os fatos.</p>
+            <ul class="space-y-1 text-sm text-neutral-400">
+              <li>• dim_cliente (cliente_id, nome, regiao, segmento, dt_cadastro)</li>
+              <li>• dim_produto (produto_id, nome, categoria, preco, fornecedor)</li>
+              <li>• dim_tempo (data_id, dia, mes, trimestre, ano, dia_semana)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> O Poder dos Resumos Pré-calculados
+        </h3>
+        <p class="text-neutral-300 mb-3">Em vez de um agente calcular "receita total por região no último trimestre" varando 10M de linhas toda vez, você materializa essa tabela:</p>
+        <code class="block bg-dark-700 rounded-lg p-4 text-emerald-400 text-sm">resumo_receita_trimestral (regiao, trimestre, receita_total, n_pedidos, ticket_medio)</code>
+        <p class="text-neutral-300 mt-3">O agente consulta uma tabela com 100 linhas em vez de 10 milhões. 100x mais rápido, 100x mais barato.</p>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📈</span> O Que Materializar
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong>Sempre:</strong> métricas consultadas diariamente (receita, volume, usuários ativos)</li>
+          <li><strong>Considere:</strong> agrupamentos frequentes (por região, produto, período)</li>
+          <li><strong>Opcional:</strong> análises ad-hoc que acontecem raramente — deixe o agente calcular na hora</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold">🧠 Topo: Briefs, Agentes e Decisões</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O topo da pirâmide é onde os dados se tornam inteligência. <strong class="text-emerald-400">Briefs combinam dados resumidos com contexto de negócio</strong> para criar o input perfeito para agentes tomarem decisões de qualidade.
+      </p>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📄</span> O que é um Brief Bem Estruturado
+        </h3>
+        <div class="space-y-3 text-neutral-300">
+          <p>Um brief eficiente tem 4 componentes:</p>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">1.</span>
+            <div><strong class="text-white">Contexto</strong> — o que está acontecendo no negócio, período, foco</div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">2.</span>
+            <div><strong class="text-white">Dados</strong> — resumos relevantes, métricas chave do período</div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">3.</span>
+            <div><strong class="text-white">Comparativos</strong> — como isso se compara com períodos anteriores ou benchmarks</div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 font-bold w-6">4.</span>
+            <div><strong class="text-white">Pergunta</strong> — o que o agente precisa analisar, decidir ou recomendar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-5">
+          <h4 class="font-bold text-red-400 mb-3">✗ Brief Ruim</h4>
+          <p class="text-sm text-neutral-300">"Analise as vendas do mês e diga o que está errado."</p>
+          <p class="text-xs text-neutral-500 mt-2">Sem dados, sem contexto, sem comparativo, pergunta vaga. O agente vai inventar contexto.</p>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <h4 class="font-bold text-emerald-400 mb-3">✓ Brief Bom</h4>
+          <p class="text-sm text-neutral-300">"Abril/2026: R$1,2M em vendas (-8% vs março, -3% vs abril/2025). Região Sul -15%. Produto X +22%. Análise: o que explica a queda no Sul e se o crescimento do Produto X pode compensar?"</p>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Briefs São Consequência da Pirâmide
+        </h3>
+        <p class="text-neutral-300">Briefs bons só existem quando os resumos (Camada 4) estão bem estruturados. Você não pode escrever "R$1,2M em vendas" no brief se a camada de resumos não tiver calculado essa métrica de forma confiável e atualizada.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold">🔗 Como Cada Camada Alimenta a Próxima</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A pirâmide é um fluxo. <strong class="text-emerald-400">Cada camada é input obrigatório da próxima.</strong> Quando uma camada falha, o sistema pode continuar funcionando — mas entregando resultados errados. Esse é o perigo das falhas silenciosas.
+      </p>
+
+      <!-- Cadeia de dependência -->
+      <div class="space-y-2 mb-8">
+        <div class="flex items-center space-x-3">
+          <div class="bg-dark-700 rounded-lg px-4 py-2 text-sm font-medium flex-1 text-center">📁 Fontes Brutas</div>
+          <span class="text-neutral-500">→</span>
+          <div class="bg-dark-700 rounded-lg px-4 py-2 text-sm font-medium flex-1 text-center">🔍 Auditoria</div>
+          <span class="text-neutral-500">→</span>
+          <div class="bg-dark-700 rounded-lg px-4 py-2 text-sm font-medium flex-1 text-center">📋 Snippets</div>
+          <span class="text-neutral-500">→</span>
+          <div class="bg-dark-700 rounded-lg px-4 py-2 text-sm font-medium flex-1 text-center">📊 Resumos</div>
+          <span class="text-neutral-500">→</span>
+          <div class="bg-emerald-600 rounded-lg px-4 py-2 text-sm font-medium flex-1 text-center">🧠 Decisão</div>
+        </div>
+      </div>
+
+      <!-- Falhas por camada -->
+      <div class="space-y-4 mb-6">
+        <h3 class="font-semibold text-neutral-300">O que quebra quando cada camada falha:</h3>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-red-500">
+          <h4 class="font-semibold text-white mb-1">Base falha → tudo falha</h4>
+          <p class="text-sm text-neutral-400">Fonte corrompida ou atualização parada. O sistema trabalha com dados de ontem (ou do mês passado) achando que são de hoje.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-orange-500">
+          <h4 class="font-semibold text-white mb-1">Auditoria falha → problemas não detectados</h4>
+          <p class="text-sm text-neutral-400">Duplicatas não detectadas inflam métricas. Nulos não tratados geram zeros falsos em cálculos de média.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-yellow-500">
+          <h4 class="font-semibold text-white mb-1">Snippets ruins → agente com modelo mental errado</h4>
+          <p class="text-sm text-neutral-400">Agente nunca viu o valor "suspenso" no status, então gera SQL que ignora clientes suspensos em análises de churn.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600 border-l-4 border-l-blue-500">
+          <h4 class="font-semibold text-white mb-1">Resumos errados → decisões erradas</h4>
+          <p class="text-sm text-neutral-400">Tabela de resumo mensal calculou receita sem considerar devoluções. Todos os relatórios do mês mostram R$200k a mais do que o real.</p>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">🚨</span> Falha Silenciosa é Pior que Falha Barulhenta
+        </h3>
+        <p class="text-neutral-300">Um sistema que quebra e para pode ser corrigido rapidamente. Um sistema que quebra e continua entregando resultados errados pode causar danos durante semanas. <strong>Por isso monitoramento em cada camada não é opcional — é a proteção contra o desastre silencioso.</strong></p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 1.3
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Base (Fontes Brutas)</strong>
+              <span class="text-neutral-400"> — inventarie antes de processar. Trate como suspeito até provar o contrário</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Auditoria</strong>
+              <span class="text-neutral-400"> — diagnóstico completo: shape, tipos, nulos, duplicatas, range. Documento o estado inicial</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Snippets</strong>
+              <span class="text-neutral-400"> — 100 linhas curadas > 1M aleatórias para dar contexto a agentes</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Resumos</strong>
+              <span class="text-neutral-400"> — tabelas fato + dimensão pré-calculadas. Agentes 100x mais eficientes</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Topo (Briefs + Decisões)</strong>
+              <span class="text-neutral-400"> — só funciona bem quando a base é sólida</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Falha silenciosa</strong>
+              <span class="text-neutral-400"> — pior que falha barulhenta. Monitoramento em cada camada é obrigatório</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">1.4 — Discreto vs Contínuo: As Lentes de Análise. A distinção que muda o tipo de auditoria e o tipo de pergunta que você consegue responder.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior
+          </a>
+          <a href="modulo-1-4.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próximo Módulo →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Eng. Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+
+    if (localStorage.getItem('theme') === 'light') {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+
+</body>
+</html>

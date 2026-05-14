@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.4 Text-to-SQL | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 — Visão Avançada</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.4</span>
+    </div>
+  </div>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.4</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">💬 Text-to-SQL — Agentes Conversando com Dados Limpos</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">A arquitetura que permite ao agente responder perguntas de negócio sem jogar milhões de linhas no contexto.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">40</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Prático</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">💬 O que é Text-to-SQL</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Text-to-SQL é a capacidade de transformar uma pergunta em linguagem natural em uma query SQL válida e executável. O usuário fala como humano. O agente traduz para SQL. O banco executa. O resultado volta em linguagem natural. É a interface mais democrática entre executivos e dados estruturados.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Como funciona na prática</h3>
+        <div class="space-y-3">
+          <div class="flex items-center space-x-3">
+            <span class="text-neutral-500 text-sm w-24 flex-shrink-0">Usuário diz:</span>
+            <div class="flex-1 bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm italic">"Quais foram os 5 clientes com maior receita no último trimestre?"</div>
+          </div>
+          <div class="flex items-center space-x-3 pl-4">
+            <span class="text-purple-400 text-2xl">↓</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="text-neutral-500 text-sm w-24 flex-shrink-0">Agente gera:</span>
+            <div class="flex-1 bg-dark-900/50 rounded-lg p-3 font-mono text-sm text-purple-300">
+              SELECT client_name, SUM(mrr_brl) AS receita<br>
+              FROM contracts<br>
+              WHERE contract_start &gt;= '2025-10-01'<br>
+              GROUP BY client_name<br>
+              ORDER BY receita DESC<br>
+              LIMIT 5;
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 pl-4">
+            <span class="text-purple-400 text-2xl">↓</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="text-neutral-500 text-sm w-24 flex-shrink-0">DuckDB retorna:</span>
+            <div class="flex-1 bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm">5 linhas com client_name e receita total. Nada mais.</div>
+          </div>
+          <div class="flex items-center space-x-3 pl-4">
+            <span class="text-purple-400 text-2xl">↓</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="text-neutral-500 text-sm w-24 flex-shrink-0">Agente responde:</span>
+            <div class="flex-1 bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm italic">"Os 5 maiores clientes por receita no Q4 foram: Acme Corp (R$45.000), Beta Ltda (R$38.500)..."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Onde falha sem dados limpos
+        </h3>
+        <p class="text-neutral-300">Text-to-SQL sobre dados sujos = respostas confiantes sobre mentiras. Se o campo mrr_brl tem valores negativos por bug de importação, o agente vai somá-los como se fossem legítimos e responder com absoluta convicção. O agente não vai saber que o dado está errado. Vai responder com convicção.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🏗️ Arquitetura Completa</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A arquitetura Text-to-SQL com DuckDB é surpreendentemente simples. Cada camada tem uma responsabilidade única e pode ser inspecionada, testada e substituída independentemente.
+      </p>
+
+      <div class="space-y-3 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">1</div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Pergunta em linguagem natural</h4>
+            <p class="text-neutral-300 text-sm">O usuário (ou outro agente) faz uma pergunta de negócio em texto livre. Sem SQL, sem formato específico.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">2</div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Claude Code gera o SQL</h4>
+            <p class="text-neutral-300 text-sm">Com o schema e o data dictionary no contexto, o agente traduz a pergunta para SQL válido. O SQL pode ser inspecionado antes de executar — isso é fundamental para auditoria.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">3</div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">DuckDB executa localmente</h4>
+            <p class="text-neutral-300 text-sm">DuckDB lê os CSVs ou Parquets diretamente do disco, executa a query em memória, retorna apenas o resultado filtrado. Sem servidor, sem setup complexo, sem dados na nuvem.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">4</div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Resultado compacto no contexto</h4>
+            <p class="text-neutral-300 text-sm">5, 10, 20 linhas. O contexto recebe apenas o que importa para responder a pergunta. O agente formula a resposta em linguagem natural com os dados reais.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">Por que DuckDB e não Pandas?</h3>
+        <p class="text-neutral-300 mb-3">DuckDB executa SQL diretamente em arquivos CSV e Parquet, sem carregar tudo na memória. Para datasets de 1GB+, Pandas trava. DuckDB processa em segundos. Para datasets menores, DuckDB também vence — é mais simples, mais rápido, e o SQL gerado pelo agente é auditável por qualquer pessoa.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🚫 Por que Você Não Joga Milhões de Linhas no Contexto</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A intuição errada: "se eu jogar todos os dados no contexto, o agente vai ter tudo que precisa para responder". A realidade: contexto tem limite, custo, e qualidade de raciocínio que degrada com volume. SQL é o filtro inteligente.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Abordagem ingênua — dados no contexto</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>• 18.000 linhas de CSV no contexto</li>
+            <li>• ~1.5M tokens usados só nos dados</li>
+            <li>• Custo: ~$15-30 por query</li>
+            <li>• Qualidade de resposta: degradada</li>
+            <li>• Impossível para datasets &gt; 100k linhas</li>
+            <li>• Latência: 30-60 segundos</li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">✓ Text-to-SQL com DuckDB</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>• Schema + data dictionary no contexto (~500 tokens)</li>
+            <li>• SQL gerado (~200 tokens)</li>
+            <li>• Resultado: 5-20 linhas no contexto</li>
+            <li>• Custo: ~$0.01 por query</li>
+            <li>• Escala para bilhões de linhas</li>
+            <li>• Latência: 2-5 segundos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3">A regra de ouro do contexto</h3>
+        <p class="text-neutral-300">Você não joga 18.000 linhas no contexto. Você pede ao agente para escrever o SQL, e o DuckDB retorna as 5 linhas que importam. O contexto recebe o resultado compacto — não o dataset bruto. Esse é o princípio de eficiência de contexto mais importante da arquitetura.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">✅ O Prompt de Auditoria como Pré-Requisito Absoluto</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Text-to-SQL não funciona sobre dados sujos. É uma verdade inconveniente que muitos ignoram. Antes de liberar qualquer pergunta de negócio via SQL, os dados precisam passar pelo gate de qualidade completo.
+      </p>
+
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">O pipeline correto — auditoria antes de Text-to-SQL</h3>
+        <div class="space-y-2">
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6">1</span>
+            <span class="text-neutral-300 text-sm">Receber os dados brutos do cliente</span>
+            <span class="text-neutral-500 text-xs ml-auto">CSV, Excel, JSON</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6">2</span>
+            <span class="text-neutral-300 text-sm">Criar ou obter o Data Dictionary</span>
+            <span class="text-neutral-500 text-xs ml-auto">Módulo 3.3</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-red-900/20 rounded-lg p-3 border border-red-500/20">
+            <span class="text-red-400 font-bold w-6">3</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-red-400">Executar auditoria completa</strong> — verificar todos os campos contra o dicionário</span>
+            <span class="text-red-400 text-xs ml-auto">GATE</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-purple-400 font-bold w-6">4</span>
+            <span class="text-neutral-300 text-sm">Corrigir problemas encontrados na auditoria</span>
+            <span class="text-neutral-500 text-xs ml-auto">Limpeza</span>
+          </div>
+          <div class="flex items-center space-x-3 bg-purple-900/20 rounded-lg p-3 border border-purple-500/20">
+            <span class="text-purple-400 font-bold w-6">5</span>
+            <span class="text-neutral-300 text-sm"><strong class="text-purple-400">Liberar Text-to-SQL</strong> — agora os dados são confiáveis</span>
+            <span class="text-purple-400 text-xs ml-auto">✓ OK</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> O perigo do GIGO em Text-to-SQL
+        </h3>
+        <p class="text-neutral-300">GIGO — Garbage In, Garbage Out. Um campo de receita com valores negativos por bug de importação vai ser somado como se fossem estornos legítimos. O CEO vai receber um número errado com a aparência de análise sofisticada. A confiança no sistema vai aumentar — enquanto as decisões são tomadas sobre dados incorretos.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">💡 Exemplos Reais de Text-to-SQL</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A melhor forma de entender Text-to-SQL é vê-lo em ação. Os exemplos abaixo são reais — tipo de pergunta, SQL gerado e resultado obtido. Cada um representa um padrão que você vai usar repetidamente em projetos reais.
+      </p>
+
+      <div class="space-y-6 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <p class="text-purple-400 font-semibold text-sm mb-3">Exemplo 1 — Top clientes por receita</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">Prompt ao agente:</p>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm italic">"Load all four CSVs into DuckDB engagement.duckdb. Run a query that returns the top 5 clients by revenue."</div>
+            </div>
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">SQL gerado:</p>
+              <div class="bg-dark-900/50 rounded-lg p-3 font-mono text-xs text-purple-300">
+                SELECT c.client_name,<br>
+                &nbsp;&nbsp;SUM(e.revenue_brl) AS total_revenue<br>
+                FROM engagements e<br>
+                JOIN clients c ON e.client_id = c.id<br>
+                WHERE e.is_active = 1<br>
+                GROUP BY c.client_name<br>
+                ORDER BY total_revenue DESC<br>
+                LIMIT 5;
+              </div>
+            </div>
+          </div>
+          <p class="text-neutral-400 text-xs mt-3">Resultado: 5 linhas em 1.2 segundos. Sem jogar nada no contexto.</p>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <p class="text-purple-400 font-semibold text-sm mb-3">Exemplo 2 — Churn dos últimos 90 dias</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">Pergunta:</p>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm italic">"Quais clientes cancelaram nos últimos 90 dias? Me dá nome, data de cancelamento e MRR perdido."</div>
+            </div>
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">SQL gerado:</p>
+              <div class="bg-dark-900/50 rounded-lg p-3 font-mono text-xs text-purple-300">
+                SELECT client_name,<br>
+                &nbsp;&nbsp;cancellation_date,<br>
+                &nbsp;&nbsp;mrr_brl AS mrr_perdido<br>
+                FROM contracts<br>
+                WHERE is_active = 0<br>
+                AND cancellation_date &gt;= CURRENT_DATE - 90<br>
+                ORDER BY cancellation_date DESC;
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <p class="text-purple-400 font-semibold text-sm mb-3">Exemplo 3 — Utilização por consultor</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">Pergunta:</p>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-neutral-300 text-sm italic">"Qual a utilização média de cada consultor esta semana? Ordena do mais ocupado para o menos."</div>
+            </div>
+            <div>
+              <p class="text-neutral-500 text-xs mb-2">SQL gerado:</p>
+              <div class="bg-dark-900/50 rounded-lg p-3 font-mono text-xs text-purple-300">
+                SELECT consultant_name,<br>
+                &nbsp;&nbsp;ROUND(AVG(utilization_pct), 1) AS avg_utilization<br>
+                FROM timesheets<br>
+                WHERE week_start = DATE_TRUNC('week', CURRENT_DATE)<br>
+                GROUP BY consultant_name<br>
+                ORDER BY avg_utilization DESC;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> O SQL é auditável — e isso é uma vantagem
+        </h3>
+        <p class="text-neutral-300">Diferente de uma análise em prosa, o SQL gerado pode ser revisado por qualquer pessoa que saiba a linguagem. O CEO pode mostrar para o CFO: "aqui está exatamente como esse número foi calculado". Isso é transparência que planilhas Excel não conseguem oferecer.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">⚠️ Limites do Text-to-SQL</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Text-to-SQL é poderoso dentro do seu domínio — dados estruturados, perguntas analíticas, resultados tabulares. Fora desse domínio, ele falha de formas previsíveis. Conhecer os limites é saber quando usar outra abordagem.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Quando Text-to-SQL não funciona</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Dados não-estruturados (texto, PDFs, emails)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Queries com 10+ joins aninhados (SQL gerado fica inválido)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Perguntas que requerem raciocínio além dos dados (previsões, causalidade)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Dados sem schema claro (JSON deeply nested)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Real-time com requisitos de latência &lt; 100ms</span></li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6">
+          <h4 class="font-bold text-purple-400 mb-4">✓ Alternativas por caso</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Texto: RAG com vector database</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Joins complexos: views pré-computadas no DuckDB</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Previsões: Python com scikit-learn ou Prophet</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>JSON aninhado: normalização prévia ou jq</span></li>
+            <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Real-time: streaming pipeline (Kafka + Flink)</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">O sinal de que Text-to-SQL não está servindo</h3>
+        <p class="text-neutral-300">Se o SQL gerado falha mais de 20% das vezes, ou se o agente precisa de mais de 3 tentativas para gerar uma query correta, é sinal de que ou os dados precisam ser normalizados antes, ou a pergunta está fora do domínio do SQL. Não tente forçar.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Text-to-SQL</strong><span class="text-neutral-400"> — linguagem natural → SQL → resultado compacto → resposta</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Arquitetura DuckDB</strong><span class="text-neutral-400"> — execução local, sem servidor, sem dados na nuvem</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Eficiência de contexto</strong><span class="text-neutral-400"> — 5 linhas no contexto, não 18.000</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Auditoria primeiro</strong><span class="text-neutral-400"> — dados sujos = respostas confiantes sobre mentiras</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">SQL auditável</strong><span class="text-neutral-400"> — transparência que planilhas não oferecem</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Limites conhecidos</strong><span class="text-neutral-400"> — não-estruturado, joins complexos, real-time têm alternativas específicas</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">3.5 — ⚖️ Primitivos Corretos — Skill vs Regra vs Hook vs Script: o erro mais silencioso da stack</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-3-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-3-5.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

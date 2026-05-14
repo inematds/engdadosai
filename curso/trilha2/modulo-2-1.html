@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2.1 — Auditoria de 4 Eixos | Engenharia de Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Procedimentos</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Visão Avançada</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2 — Dicas e Procedimentos Técnicos</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.1</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.1</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔍 Auditoria de 4 Eixos na Prática</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O framework de 4 dimensões que todo engenheiro usa para entender qualquer dataset em menos de uma hora. Volume, Schema, Snippet e Distribuição — aplicados na prática com um caso real.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">6</div>
+          <div class="text-xs text-neutral-400">Tópicos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">35</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Inter.</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Prático</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- IMAGEM DO MÓDULO -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <div class="rounded-xl overflow-hidden border border-dark-600 mb-12">
+      <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_04_02.png" alt="Auditoria de 4 Eixos" class="w-full object-cover max-h-80">
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">📦 Eixo Volume</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">O primeiro eixo mede a <strong class="text-blue-400">magnitude do dataset</strong>. Antes de qualquer análise, você precisa saber com o que está lidando: quantas linhas, colunas, quanto espaço ocupa, quantas tabelas existem. Essa informação determina qual ferramenta usar e quanto tempo vai levar o processamento.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📦</span> O que medir no Eixo Volume</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Linhas:</strong> COUNT(*) ou len(df) — a unidade básica de escala</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Colunas:</strong> len(df.columns) — complexidade do schema</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Tamanho em disco:</strong> df.memory_usage(deep=True).sum() / 1024**2 MB</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Número de tabelas:</strong> total de arquivos ou tabelas relacionadas no projeto</span></li>
+        </ul>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 text-center">
+          <div class="text-3xl font-bold text-blue-400 mb-1">&lt; 10k</div>
+          <div class="text-sm text-neutral-400">linhas → pandas, Excel</div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 text-center">
+          <div class="text-3xl font-bold text-blue-400 mb-1">10k–10M</div>
+          <div class="text-sm text-neutral-400">linhas → DuckDB, SQLite</div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 text-center">
+          <div class="text-3xl font-bold text-blue-400 mb-1">&gt; 10M</div>
+          <div class="text-sm text-neutral-400">linhas → Spark, BigQuery</div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Antes de carregar o arquivo inteiro, use <code class="bg-dark-700 px-1 rounded text-blue-400">pd.read_csv('arquivo.csv', nrows=5)</code> para ver o schema e depois <code class="bg-dark-700 px-1 rounded text-blue-400">wc -l arquivo.csv</code> no terminal para contar linhas sem carregar nada na memória.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🗂️ Eixo Schema</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">O Schema é a <strong class="text-blue-400">radiografia estrutural</strong> do dataset. Nomes das colunas, tipos de dados declarados vs observados, e percentual de nulos. Um Schema bem auditado revela problemas antes que eles causem falhas em produção.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">🗂️</span> Checklist de Schema</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Tipos declarados vs observados:</strong> coluna "valor" com dtype=object quando deveria ser float64</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>% de nulos por coluna:</strong> df.isnull().mean() * 100 — qualquer coluna crítica acima de 5% é alerta</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Nomes das colunas:</strong> espaços, acentos, caracteres especiais quebram queries SQL</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">•</span><span><strong>Colunas duplicadas:</strong> mesmo dado em dois campos com nomes diferentes</span></li>
+        </ul>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Thresholds de nulos por tipo de coluna</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between py-2 border-b border-dark-600">
+            <span class="text-neutral-300">Chave primária / ID</span>
+            <span class="text-red-400 font-bold">0% aceito</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-dark-600">
+            <span class="text-neutral-300">Valor financeiro principal</span>
+            <span class="text-yellow-400 font-bold">&lt; 2% aceitável</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-dark-600">
+            <span class="text-neutral-300">Campo descritivo / texto</span>
+            <span class="text-blue-400 font-bold">&lt; 20% aceitável</span>
+          </div>
+          <div class="flex items-center justify-between py-2">
+            <span class="text-neutral-300">Campo opcional / enriquecimento</span>
+            <span class="text-neutral-400 font-bold">definir caso a caso</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🔬 Eixo Snippet</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">O Snippet é a <strong class="text-blue-400">inspeção visual estratégica</strong> — 100 linhas escolhidas com critério para revelar o que nenhuma estatística agregada revela: padrões anômalos, formatações inconsistentes, valores claramente errados que passam despercebidos quando você olha só para médias e contagens.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Como amostrar corretamente</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>30 linhas do topo (df.head(30))</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>40 linhas aleatórias do meio</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>15 maiores valores (df.nlargest)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>15 menores valores (df.nsmallest)</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que evitar</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>df.sample(100) puro sem critério</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Olhar só as primeiras 5 linhas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Confiar só em describe() e info()</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Não salvar o snippet para referência futura</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Salve o snippet em <code class="bg-dark-700 px-1 rounded text-blue-400">snippets/stripe_snippet_100.csv</code>. Quando o engenheiro ou o agente precisar referenciar anomalias detectadas, o arquivo está lá — sem precisar reprocessar o dataset inteiro.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">📊 Eixo Distribuição</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">A Distribuição revela <strong class="text-blue-400">como os dados se comportam estatisticamente</strong>. Não basta saber que existe uma coluna "receita" — você precisa saber se vai de $0 a $50.000, se tem outliers de $1M, e quais são as 10 categorias mais frequentes de clientes.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📊</span> Análise de Distribuição por Tipo</h3>
+        <div class="space-y-4">
+          <div>
+            <h4 class="text-white font-semibold mb-2">Colunas numéricas:</h4>
+            <p class="text-neutral-300 text-sm">min, p5, p25, mediana, p75, p95, max — os percentis revelam a forma da distribuição. Uma grande diferença entre mediana e média indica outliers.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-2">Colunas categóricas:</h4>
+            <p class="text-neutral-300 text-sm">value_counts() com as top 10 categorias e suas frequências. Detecta dominância (90% dos registros numa categoria) e categorias raras que podem ser erros de digitação.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-2">Colunas de data:</h4>
+            <p class="text-neutral-300 text-sm">min e max (range do período), distribuição mensal (buscar sazonalidade), detecção de datas futuras ou impossíveis (ex: 1900-01-01 é valor default de migração).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🏢 Walkthrough BrightPath Advisory</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">A BrightPath Advisory é uma consultoria financeira com <strong class="text-blue-400">5 fontes de dados bagunçadas</strong>. Veja como os 4 eixos se aplicam a cada uma — e o que foi encontrado que não seria detectado sem o framework.</p>
+
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">S</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Stripe Payments — 18.000 registros</h4>
+            <p class="text-sm text-neutral-400 mb-3">Fonte: export CSV da API do Stripe</p>
+            <p class="text-neutral-300 text-sm"><strong class="text-blue-400">Anomalia encontrada:</strong> Coluna "description" contém JSON embutido como string — ex: <code class="bg-dark-700 px-1 rounded text-xs">{"invoice_id":"inv_123","client":"Acme Corp","service":"Consultoria"}</code>. Informações críticas de negócio presas dentro de uma string que o pandas lê como texto opaco.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">H</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">HubSpot Contacts — 12.000 contatos</h4>
+            <p class="text-sm text-neutral-400 mb-3">Fonte: export CSV do CRM</p>
+            <p class="text-neutral-300 text-sm"><strong class="text-blue-400">Anomalia encontrada:</strong> Headers customizados ("Contact: First Name" em vez de "first_name"), 47% de nulos na coluna "source" (obrigatória no SLA), e mistura de status em inglês e português na coluna "lifecycle_stage".</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">T</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Time Tracker — 3 abas Excel</h4>
+            <p class="text-sm text-neutral-400 mb-3">Fonte: planilha Excel com 1 aba por consultor</span></p>
+            <p class="text-neutral-300 text-sm"><strong class="text-blue-400">Anomalia encontrada:</strong> Cada aba usa um formato de data diferente — Consultor A usa DD/MM/YYYY, Consultor B usa YYYY-MM-DD, Consultor C usa "15 jan 2025" como texto. Impossível juntar sem normalização.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">Q</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">QuickBooks P&L — Arquivos inconsistentes</h4>
+            <p class="text-sm text-neutral-400 mb-3">Fonte: exports mensais do QuickBooks</p>
+            <p class="text-neutral-300 text-sm"><strong class="text-blue-400">Anomalia encontrada:</strong> Cada mês tem uma estrutura ligeiramente diferente — colunas adicionadas/removidas conforme o contador ajustou o template. Janeiro tem 18 colunas, julho tem 22. Não é possível fazer UNION sem mapear as diferenças primeiro.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">F</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Founder Master Tracker — Planilha mestre</h4>
+            <p class="text-sm text-neutral-400 mb-3">Fonte: Google Sheets do fundador</p>
+            <p class="text-neutral-300 text-sm"><strong class="text-blue-400">Anomalia encontrada:</strong> Mistura de datetime (com hora) e date (só data) na coluna "contract_date". Algumas linhas têm "2025-01-15 14:30:00", outras têm "2025-01-15", outras têm "15/01/2025". Três formatos, uma coluna.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📌</span> Conclusão do Walkthrough</h3>
+        <p class="text-neutral-300">Em menos de 1 hora de auditoria com os 4 eixos, identificamos: 1 JSON embutido, 1 campo obrigatório com 47% de nulos, 3 formatos de data incompatíveis, 1 schema mutante por mês, e 1 mistura de tipos na coluna de data principal. Sem o framework, cada um desses problemas seria descoberto apenas quando o pipeline quebrasse.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">💬 O Prompt Exato para Claude Code</h2>
+      </div>
+      <p class="text-neutral-300 mb-6 leading-relaxed">Com o prompt certo, você delega a auditoria completa ao Claude Code e recebe um relatório estruturado dos 4 eixos em minutos. O segredo está nos <strong class="text-blue-400">detalhes de instrução</strong> — especialmente a proibição de modificar os dados raw.</p>
+
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">💬</span> Prompt Exato — Copie e Use</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm text-neutral-300 leading-relaxed">
+          <p class="text-neutral-500 mb-2"># Prompt para auditoria de 4 eixos</p>
+          <p>Leia o CLAUDE.md e me diga quais são as 5 fontes do projeto BrightPath e o que é incomum em cada uma.</p>
+          <p class="mt-2">Depois rode um audit pass completo no arquivo raw Stripe payments usando o framework de 4 eixos:</p>
+          <ul class="mt-2 ml-4 space-y-1">
+            <li>1. Volume: total de linhas, colunas e tamanho em MB</li>
+            <li>2. Schema: tipos de dados, % de nulos por coluna, nomes problemáticos</li>
+            <li>3. Snippet: amostra estratificada de 100 linhas (30 topo, 40 aleatório, 30 bordas)</li>
+            <li>4. Distribuição: min/mediana/max dos numéricos, top 10 categorias dos strings</li>
+          </ul>
+          <p class="mt-2">Salve o relatório em <span class="text-blue-400">audit/stripe_audit.md</span> e o snippet em <span class="text-blue-400">snippets/stripe_100.csv</span>.</p>
+          <p class="mt-2 text-red-400 font-semibold">IMPORTANTE: Não modifique nada no diretório raw/. Apenas leia e analise.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h4 class="font-semibold text-white mb-3">O que o prompt faz certo</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-blue-400">✓</span><span>Referencia o CLAUDE.md para contexto do projeto</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">✓</span><span>Especifica a fonte alvo explicitamente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">✓</span><span>Declara os 4 eixos com detalhe de cada um</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">✓</span><span>Define onde salvar cada artefato</span></li>
+            <li class="flex items-start space-x-2"><span class="text-blue-400">✓</span><span>Proíbe modificação dos dados raw</span></li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+          <h4 class="font-semibold text-white mb-3">O que o prompt genérico faz errado</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>"Analise os dados do Stripe" — sem especificar o quê</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Sem instrução de onde salvar o resultado</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Sem proteção explícita dos dados raw</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Framework implícito — o agente inventa o formato</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">✅</span> Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">Eixo Volume</strong><span class="text-neutral-400"> — quantidade de linhas, colunas e tamanho determinam a ferramenta certa</span></div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">Eixo Schema</strong><span class="text-neutral-400"> — tipos errados e nulos altos são a fonte de 60% dos bugs de pipeline</span></div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">Eixo Snippet</strong><span class="text-neutral-400"> — 100 linhas estratificadas revelam o que estatísticas agregadas escondem</span></div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">Eixo Distribuição</strong><span class="text-neutral-400"> — percentis e value_counts revelam a forma real dos dados</span></div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">BrightPath Walkthrough</strong><span class="text-neutral-400"> — 5 fontes reais, 5 tipos diferentes de problemas detectados em &lt; 1h</span></div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div><strong class="text-white">Prompt exato</strong><span class="text-neutral-400"> — delegar a auditoria ao Claude Code com instruções precisas e proteção do raw</span></div>
+          </div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">2.2 — A Regra das 100 Linhas: como amostrar para revelar 80% dos problemas</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para Trilha 2</a>
+          <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Próximo Módulo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Engenharia de Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light') {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

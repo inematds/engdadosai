@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.1 — O Que é Engenharia de Dados | Eng. Dados com IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🏗️</span>
+            <span class="font-bold text-lg hidden sm:inline">Eng. Dados com IA</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span>
+            <span class="hidden sm:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span>
+            <span class="hidden sm:inline">Dicas Técnicas</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span>
+            <span class="hidden sm:inline">Projetos</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1 — Fundamentos</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER DO MÓDULO -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.1
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔍 O Que é Engenharia de Dados e Por Que Importa</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Desmistificando a disciplina que sustenta todos os sistemas de IA modernos. Antes de construir qualquer coisa, você precisa entender o terreno.</p>
+
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">6</div>
+          <div class="text-xs text-neutral-400">Tópicos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">40</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Iniciante</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Teoria</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold">🔍 A Definição Real de Engenharia de Dados</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Antes de aprender qualquer ferramenta ou técnica, você precisa saber o que é a disciplina. <strong class="text-emerald-400">Engenharia de Dados não é programação genérica, não é análise de dados, e não é ciência de dados.</strong> É uma disciplina específica com responsabilidades específicas.
+      </p>
+
+      <!-- Box Conceito Principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">📖</span> Definição Oficial
+        </h3>
+        <p class="text-neutral-300 mb-4 text-lg font-medium">"Engenharia de Dados é a disciplina de construir e manter os sistemas que coletam, armazenam, transformam e entregam dados de forma confiável para quem precisa deles."</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span><strong>Coletar</strong> — ingestão de fontes diversas (APIs, bancos, arquivos, streams)</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span><strong>Armazenar</strong> — escolher onde e como persistir os dados (data lake, warehouse, cache)</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span><strong>Transformar</strong> — limpar, normalizar, modelar para uso</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span><strong>Entregar</strong> — disponibilizar no formato certo, no momento certo, para quem precisa</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Box Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A Metáfora do Encanador
+        </h3>
+        <p class="text-neutral-300">O engenheiro de dados é o encanador do mundo digital. <strong>Ninguém pensa nele quando tudo funciona</strong> — mas quando o cano estoura, é o primeiro a ser chamado. E quando o sistema de IA da empresa começa a gerar resultados errados, é o engenheiro de dados quem vai descobrir que o problema estava no pipeline desde o início.</p>
+      </div>
+
+      <!-- Grid Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que DE FAZ</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Constrói pipelines de ingestão de dados</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Garante qualidade e confiabilidade dos dados</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Modela dados para consulta eficiente</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Monitora saúde do pipeline em produção</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que DE NÃO faz (principalmente)</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Treinar modelos de machine learning</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Criar dashboards de BI (isso é AE)</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Interpretar resultados de negócio</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Definir KPIs e métricas de produto</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold">🏠 A Metáfora do Piso</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Imagine que você está construindo uma casa. Você pode ter o melhor arquiteto do mundo, os materiais mais caros, os construtores mais talentosos — <strong class="text-emerald-400">mas se o piso é instável, a casa toda balança.</strong> Dados são o piso de qualquer sistema de IA.
+      </p>
+
+      <!-- Imagem -->
+      <div class="mb-6 rounded-xl overflow-hidden border border-dark-600">
+        <img src="../../doc/ChatGPT Image 14 de mai. de 2026, 02_03_47.png" alt="Metáfora do piso de dados" class="w-full object-cover max-h-80">
+      </div>
+
+      <!-- Box Conceito -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🏗️</span> O Princípio do Piso
+        </h3>
+        <p class="text-neutral-300 mb-4">Um agente GPT-4 com dados sujos vai errar com confiança. Um modelo simples com dados limpos vai surpreender. O modelo não determina o teto do sistema — o piso de dados determina.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Piso sólido = dados limpos, consistentes, auditados</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Piso instável = dados com nulos, inconsistências, duplicatas</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Piso podre = dados que parecem corretos mas não são (pior caso)</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Box Alerta -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Atenção: O Erro Silencioso
+        </h3>
+        <p class="text-neutral-300"><strong>Dado sujo não faz o agente parar. Faz ele responder com confiança — e errar.</strong> Esse é o perigo real. Um sistema que quebra é fácil de identificar. Um sistema que funciona e gera resultados errados pode causar danos durante semanas antes de ser detectado.</p>
+      </div>
+
+      <!-- Dados de pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> A Realidade dos Projetos de IA
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong>80%</strong> do tempo em projetos de Data Science é gasto limpando dados, não construindo modelos</li>
+          <li><strong>85%</strong> dos projetos de IA em empresas falham antes de chegar à produção — a maioria por problemas de dados</li>
+          <li><strong>60%</strong> das empresas reportam que seus dados têm problemas de qualidade significativos</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold">🔬 DE vs Data Science vs Analytics Engineering</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Três papéis que vivem próximos, frequentemente se confundem, e têm responsabilidades muito diferentes. <strong class="text-emerald-400">Entender onde cada um começa e termina evita conflitos, lacunas e trabalho duplicado</strong> em projetos de dados.
+      </p>
+
+      <!-- Timeline -->
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold text-sm">DE</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Data Engineer — O Construtor da Infraestrutura</h4>
+            <p class="text-sm text-neutral-400 mb-3">Responsabilidade: garantir que os dados existam, sejam confiáveis e estejam disponíveis</p>
+            <p class="text-neutral-300 text-sm">Constrói pipelines, gerencia bancos de dados, garante qualidade na ingestão. É chamado quando "os dados não chegam" ou "chegam errados".</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">DS</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Data Scientist — O Modelador</h4>
+            <p class="text-sm text-neutral-400 mb-3">Responsabilidade: extrair insights e construir modelos preditivos dos dados</p>
+            <p class="text-neutral-300 text-sm">Usa dados limpos para treinar modelos, fazer análises estatísticas e gerar previsões. Depende do DE para ter dados organizados.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <span class="text-purple-400 font-bold text-sm">AE</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Analytics Engineer — O Tradutor para Negócio</h4>
+            <p class="text-sm text-neutral-400 mb-3">Responsabilidade: transformar dados em métricas de negócio e dashboards</p>
+            <p class="text-neutral-300 text-sm">Usa ferramentas como dbt e Looker para criar modelos semânticos. Faz a ponte entre dados técnicos e decisões de negócio.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Na prática em empresas menores
+        </h3>
+        <p class="text-neutral-300">Em startups e PMEs, uma pessoa frequentemente faz os três papéis. O risco é não separar mentalmente quando você está em cada modo — e fazer trabalho de AE sobre dados que ainda precisam de DE, gerando métricas erradas com visual bonito.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold">🤖 Por que IA é Inútil sem Dados Limpos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Modelos de linguagem grandes são impressionantes — mas eles não sabem o que não sabem. <strong class="text-emerald-400">Quando os dados de entrada são ambíguos ou inconsistentes, o modelo não para: ele infere, assume e responde como se soubesse.</strong> Isso é perigoso em contexto empresarial.
+      </p>
+
+      <!-- Box Conceito -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🎯</span> O Problema do Wild Goose Chase
+        </h3>
+        <p class="text-neutral-300 mb-4">Quando um agente recebe dados ruins, ele entra em "wild goose chase" — uma perseguição interminável de contexto. Cada call ao LLM tenta resolver ambiguidades que deveriam ter sido resolvidas na camada de dados.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Coluna "status" com valores: "ativo", "Ativo", "ATIVO", "1", "true" — o agente não sabe qual é qual</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Datas em formatos mistos: "2024-01-15", "15/01/2024", "Jan 15" — cada query pode retornar resultados diferentes</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1">•</span>
+            <span>Valores nulos sem significado definido: ausente = zero? Ausente = desconhecido? Ausente = erro?</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Box Alerta -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">🚨</span> O Custo Real
+        </h3>
+        <p class="text-neutral-300 mb-3">Cada call de LLM tentando resolver ambiguidade de dados custa tokens. Em um sistema de produção com milhares de queries por dia, isso escala rápido. Mas o custo financeiro é menor que o custo do erro:</p>
+        <p class="text-neutral-300 font-medium">Um agente de análise financeira que soma receitas duplicadas e gera um relatório executivo com números inflados pode custar muito mais do que todos os tokens gastos.</p>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Dados Limpos + Agente</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>→ Query direta, resposta precisa</li>
+            <li>→ Baixo consumo de tokens</li>
+            <li>→ Resultados reproduzíveis</li>
+            <li>→ Confiança alta nas respostas</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Dados Sujos + Agente</h4>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>→ Múltiplas tentativas para interpretar</li>
+            <li>→ Alto consumo de tokens</li>
+            <li>→ Resultados inconsistentes</li>
+            <li>→ Erros confiantes sem alerta</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold">⚠️ O Que Acontece Quando Você Pula a DE</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Não é teórico. <strong class="text-emerald-400">Empresas reais gastam fortunas tentando implementar IA sobre dados que não estão prontos.</strong> Os casos a seguir são compostos de situações reais observadas em projetos corporativos.
+      </p>
+
+      <!-- Timeline de casos -->
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold">1</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Empresa de Consultoria — Dubai</h4>
+            <p class="text-sm text-neutral-400 mb-3">Contexto: queria "conversar com os dados" usando GPT-3.5 Turbo (4k context window)</p>
+            <p class="text-neutral-300 text-sm">Os dados tinham 10 colunas com nomes inconsistentes (CustomerID, customer_id, cust_ID), valores nulos em 40% das linhas, e datas em 3 formatos diferentes. Resultado após 6 semanas de desenvolvimento: agente que respondia com confiança usando dados errados. O projeto foi cancelado.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold">2</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+            <h4 class="font-semibold text-white mb-2">Multinacional de Varejo — 10 Bilhões de Linhas</h4>
+            <p class="text-sm text-neutral-400 mb-3">Contexto: queria análise de vendas com IA generativa</p>
+            <p class="text-neutral-300 text-sm">Com 10 bilhões de linhas de transações, o problema não era o modelo — era que os dados de produto tinham sido migrados 3 vezes e cada migração adicionou inconsistências. A IA precisava de dados, não de mais poder computacional.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box Alerta -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">💸</span> O Erro Mais Caro
+        </h3>
+        <p class="text-neutral-300">Gastar centenas de dólares em tokens de agente para sifar dados sujos é o erro mais caro que existe. Não porque os tokens são caros — mas porque o tempo de desenvolvimento, o custo de confiança e o custo de decisões erradas baseadas em outputs do agente se acumulam silenciosamente.</p>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold">👷 O Papel do Engenheiro de Dados Hoje</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Com a ascensão da IA, o papel do engenheiro de dados está evoluindo — e se tornando mais crítico, não menos. <strong class="text-emerald-400">A automação vai eliminar tarefas, não o papel.</strong> Porque a maioria das empresas ainda não tem os dados organizados o suficiente para que a automação funcione.
+      </p>
+
+      <!-- Box Conceito -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center">
+          <span class="mr-2">🔮</span> O Horizonte de 12-18 Meses
+        </h3>
+        <p class="text-neutral-300 mb-4">Em 12-18 meses, muitas funções admin serão automatizadas — entrada de dados, relatórios padronizados, consultas frequentes. Mas data engineers continuarão empregados por um motivo simples:</p>
+        <p class="text-neutral-300 font-medium text-emerald-400">"A maioria das empresas não tem dados organizados o suficiente para que a automação aconteça."</p>
+        <p class="text-neutral-300 mt-3">Ironicamente, o crescimento da IA aumenta a demanda por engenheiros de dados — porque alguém precisa construir o pipeline que a IA vai consumir.</p>
+      </div>
+
+      <!-- Timeline de evolução -->
+      <div class="space-y-4 mb-6">
+        <h3 class="font-semibold text-neutral-300">O que o DE faz hoje em projetos de IA:</h3>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold text-xs">A</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-lg p-4 border border-dark-600">
+            <p class="text-sm text-neutral-300"><strong class="text-white">Antes:</strong> Construir pipelines para BI e relatórios</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold text-xs">H</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-lg p-4 border border-dark-600">
+            <p class="text-sm text-neutral-300"><strong class="text-white">Hoje:</strong> Construir pipelines para BI + preparar dados para agentes de IA + garantir qualidade que modelos precisam</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold text-xs">F</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-lg p-4 border border-dark-600">
+            <p class="text-sm text-neutral-300"><strong class="text-white">Futuro próximo:</strong> Orquestrar sistemas onde agentes e pipelines trabalham juntos — com o DE sendo o arquiteto da integração</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> A Oportunidade
+        </h3>
+        <p class="text-neutral-300">Profissionais que entendem tanto de engenharia de dados quanto de como sistemas de IA consomem dados serão os mais valiosos nos próximos anos. Este curso existe para criar exatamente esses profissionais.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO DO MÓDULO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 1.1
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">DE é infraestrutura de dados</strong>
+              <span class="text-neutral-400"> — coletar, armazenar, transformar e entregar de forma confiável</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Dados são o piso da IA</strong>
+              <span class="text-neutral-400"> — piso instável = casa instável, independente do modelo usado</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">DE ≠ DS ≠ AE</strong>
+              <span class="text-neutral-400"> — três papéis distintos com responsabilidades específicas</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">IA com dados sujos gera erros confiantes</strong>
+              <span class="text-neutral-400"> — o modelo não sabe que não sabe</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Pular DE é o erro mais caro</strong>
+              <span class="text-neutral-400"> — casos reais mostram projetos inteiros cancelados por falta de DE</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">O papel do DE cresce com a IA</strong>
+              <span class="text-neutral-400"> — não diminui. Quem constrói o pipeline que a IA consome?</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">1.2 — O Stack Completo: As 5 Camadas do Agentic OS. Vamos ver a arquitetura completa que os YouTubers não mostram.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Voltar para Trilha 1
+          </a>
+          <a href="modulo-1-2.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próximo Módulo →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Eng. Dados com IA — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+
+    if (localStorage.getItem('theme') === 'light') {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+
+</body>
+</html>
